@@ -2,18 +2,10 @@
 nixPkgs = ['nodejs']
 
 [phases.install]
-cmds = [
-  'cd client && npm install',
-  'cd ../server && npm install'
-]
+cmds = ['cd server && npm install']
 
 [phases.build]
-cmds = [
-  'cd client && npm run build',
-  'mkdir -p ../server/public',
-  'cp -r dist/* ../server/public/',
-  'cd ../server && npm run build'
-]
+cmds = ['cd server && npm run build']
 
 [start]
 cmd = 'cd server && npm start'
