@@ -10,7 +10,7 @@ cmds = [
 [phases.build]
 cmds = [
   'cd client && npm run build',
-  'cd ../server && echo "No build required for server"'
+  'cd ../server && npm run build'
 ]
 
 [start]
