@@ -1,35 +1,27 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const testRoutes = require('./routes/tests');
 
-// Add this for debugging
-console.log('Environment check on startup:');
-console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
-
 const app = express();
 
-const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5000',
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-
-// Middleware
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
-// Routes
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tests', testRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something broke!' });
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 const PORT = process.env.PORT || 5001;
