@@ -11,8 +11,14 @@ console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
 
 const app = express();
 
+const corsOptions = {
+  origin: process.env.CLIENT_URL || 'http://localhost:5000',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
