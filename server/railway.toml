@@ -1,11 +1,5 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm install"
 
 [deploy]
-startCommand = "npm start"
-restartPolicy = "on-failure"
-numRetries = 10
-
-[deploy.env]
-NODE_ENV = "production" 
+startCommand = "npm start" 
