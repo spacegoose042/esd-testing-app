@@ -6,19 +6,8 @@ const auth = require('../middleware/auth');
 // Get all users - accessible to both authenticated and unauthenticated users
 router.get('/', async (req, res) => {
     try {
-        // Get the token from the request header
         const token = req.header('Authorization')?.replace('Bearer ', '');
-        
-        let query = 'SELECT * FROM users';
-        
-        // If no token or invalid token, only return non-admin users
-        if (!token) {
-            query += ' WHERE is_admin = false';
-        }
-        
-        query += ' ORDER BY id ASC';
-        
-        const result = await pool.query(query);
+        const result = await pool.query('SELECT * FROM users ORDER BY id ASC');
         res.json(result.rows);
     } catch (err) {
         console.error('Error fetching users:', err);

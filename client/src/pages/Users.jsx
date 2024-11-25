@@ -40,7 +40,7 @@ function Users() {
         if (!window.confirm('Are you sure you want to delete this user?')) return;
 
         try {
-            const response = await fetch(`http://localhost:5001/api/users/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -66,7 +66,7 @@ function Users() {
 
         try {
             const promises = selectedUsers.map(userId =>
-                fetch(`http://localhost:5001/api/users/${userId}`, {
+                fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

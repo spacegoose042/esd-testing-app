@@ -28,7 +28,10 @@ function Home() {
           }
           return res.json();
       })
-      .then(data => setUsers(data))
+      .then(data => {
+          console.log('Received users data:', data);
+          setUsers(data);
+      })
       .catch(err => {
           console.error('Error fetching users:', err);
           setError('Failed to load users');

@@ -9,7 +9,7 @@ const testRoutes = require('./routes/tests');
 const app = express();
 
 app.use(cors({
-  origin: '*',
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
