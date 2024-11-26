@@ -8,17 +8,27 @@ const { Parser } = require('json2csv');
 router.post('/submit', async (req, res) => {
     try {
         const { user_id, test_period, passed } = req.body;
-
+        
         // Insert test result
         const result = await pool.query(
             'INSERT INTO esd_tests (user_id, test_period, passed, test_date, test_time) VALUES ($1, $2, $3, CURRENT_DATE, CURRENT_TIME) RETURNING *',
             [user_id, test_period, passed]
         );
 
+        // Get user details for the response
+        const userResult = await pool.query(
+            'SELECT first_name, last_name FROM users WHERE id = $1',
+            [user_id]
+        );
+
         res.json({
             success: true,
             message: 'Test submitted successfully',
-            test: result.rows[0]
+            test: {
+                ...result.rows[0],
+                first_name: userResult.rows[0].first_name,
+                last_name: userResult.rows[0].last_name
+            }
         });
     } catch (err) {
         console.error('Test submission error:', err);
