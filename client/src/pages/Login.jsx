@@ -13,18 +13,17 @@ function Login() {
 
         try {
             console.log('Starting login attempt...');
-            const baseUrl = import.meta.env.PROD ? 
-                'https://esd-testing-app-production.up.railway.app' : '';
+            const baseUrl = window.location.hostname === 'localhost' ? 
+                'http://localhost:5001' : 
+                'https://esd-testing-app-production.up.railway.app';
             const url = `${baseUrl}/api/auth/login`;
             
             console.log('Attempting login with:', { email });
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
 

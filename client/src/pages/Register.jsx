@@ -34,7 +34,12 @@ function Register() {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/auth/register', {
+            const baseUrl = window.location.hostname === 'localhost' ? 
+                'http://localhost:5001' : 
+                'https://esd-testing-app-production.up.railway.app';
+            const url = `${baseUrl}/api/auth/register`;
+            
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
