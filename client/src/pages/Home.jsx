@@ -53,7 +53,16 @@ function Home() {
             return;
         }
 
-        console.log('Submitting test with period:', period);
+        console.log('Current period state:', period);
+        console.log('Test value:', testValue);
+        
+        const payload = {
+            user_id: userId,
+            test_period: period,
+            passed: testValue === 'PASS'
+        };
+        
+        console.log('Sending payload:', payload);
 
         try {
             const response = await fetch(`/api/tests/submit`, {
@@ -61,11 +70,7 @@ function Home() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    user_id: userId,
-                    test_period: period,
-                    passed: testValue === 'PASS'
-                })
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
@@ -74,10 +79,7 @@ function Home() {
                 throw new Error(data.error || 'Failed to submit test');
             }
 
-            // Set success message with the result
             setSuccess(`Test submitted successfully: ${testValue}`);
-
-            // Clear form after 2 seconds
             setTimeout(() => {
                 setSuccess('');
                 clearForm();
