@@ -12,20 +12,16 @@ function Login() {
         e.preventDefault();
         setError('');
 
+        const url = `${config.apiUrl}/api/auth/login`;
+        console.log('Attempting login with:', {
+            url,
+            email,
+            currentHostname: window.location.hostname,
+            apiUrl: config.apiUrl
+        });
+
         try {
-            // First try to reach the health endpoint
-            const healthUrl = `${config.apiUrl}/api/health`;
-            console.log('Checking API health at:', healthUrl);
-            
-            const healthCheck = await fetch(healthUrl);
-            const healthData = await healthCheck.json();
-            console.log('API Health check:', healthData);
-
-            // If we get here, the API is reachable, proceed with login
-            const loginUrl = `${config.apiUrl}/api/auth/login`;
-            console.log('Proceeding with login at:', loginUrl);
-
-            const response = await fetch(loginUrl, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,6 +31,11 @@ function Login() {
             });
 
             const data = await response.json();
+            console.log('Login response:', {
+                status: response.status,
+                ok: response.ok,
+                data
+            });
             
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
@@ -45,14 +46,13 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Error details:', {
+            console.error('Login error:', {
                 message: err.message,
                 type: err.name,
-                url: config.apiUrl,
-                hostname: window.location.hostname,
-                stack: err.stack
+                url,
+                hostname: window.location.hostname
             });
-            setError(err.message || 'Login failed');
+            setError('Login failed: ' + err.message);
         }
     };
 
