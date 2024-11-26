@@ -9,7 +9,11 @@ const testRoutes = require('./routes/tests');
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:5001', 'https://esd-testing-app-production.up.railway.app'],
+  origin: [
+    'http://localhost:5001',
+    'https://esd-testing-app-production.up.railway.app',
+    'https://esd-testing-app-production.up.railway.app/'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
   credentials: true,
