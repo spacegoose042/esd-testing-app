@@ -11,39 +11,29 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        // Force environment detection
         const currentUrl = new URL(window.location.href);
-        const isRailwayApp = currentUrl.hostname.includes('railway.app');
-        
-        console.log('URL Analysis:', {
-            currentUrl: currentUrl.toString(),
-            hostname: currentUrl.hostname,
-            isRailwayApp,
-            protocol: currentUrl.protocol
-        });
-
-        const apiUrl = isRailwayApp
+        const apiUrl = currentUrl.hostname.includes('railway.app')
             ? 'https://esd-testing-app-production.up.railway.app'
             : 'http://localhost:5001';
 
-        console.log('Selected API URL:', apiUrl);
-
         try {
-            const loginUrl = `${apiUrl}/api/auth/login`;
-            console.log('Attempting login at:', loginUrl);
+            // First check if server is reachable
+            const healthCheck = await fetch(`${apiUrl}/api/health`);
+            if (!healthCheck.ok) {
+                throw new Error('Server is not responding');
+            }
 
+            const loginUrl = `${apiUrl}/api/auth/login`;
             const response = await fetch(loginUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Origin': window.location.origin
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
-            
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
             }
@@ -53,13 +43,12 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Login attempt failed:', {
-                error: err.message,
+            console.error('Login error:', {
+                message: err.message,
                 type: err.name,
-                stack: err.stack,
-                currentUrl: window.location.href
+                stack: err.stack
             });
-            setError('Login failed: ' + err.message);
+            setError(`Connection failed: ${err.message}`);
         }
     };
 
