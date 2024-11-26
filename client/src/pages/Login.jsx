@@ -12,15 +12,15 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        const apiUrl = config.apiUrl;
-        const loginUrl = `${apiUrl}/api/auth/login`;
-
-        console.log('Login attempt details:', {
-            loginUrl,
+        console.log('Config object:', config);
+        console.log('Window location:', {
             hostname: window.location.hostname,
             href: window.location.href,
-            apiUrl
+            protocol: window.location.protocol
         });
+
+        const loginUrl = `${config.apiUrl}/api/auth/login`;
+        console.log('Attempting login at URL:', loginUrl);
 
         try {
             const response = await fetch(loginUrl, {

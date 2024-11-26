@@ -1,24 +1,22 @@
+console.log('Config module loading...');
+
 const getApiUrl = () => {
     const hostname = window.location.hostname;
-    const isLocalhost = hostname === 'localhost';
+    console.log('Current hostname:', hostname);
     
-    console.log('URL Detection:', {
-        hostname,
-        isLocalhost,
-        fullUrl: window.location.href,
-        protocol: window.location.protocol
-    });
-
-    const apiUrl = isLocalhost
-        ? 'http://localhost:5001'
-        : 'https://esd-testing-app-production.up.railway.app';
-
-    console.log('Selected API URL:', apiUrl);
-    return apiUrl;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:5001';
+    }
+    
+    return 'https://esd-testing-app-production.up.railway.app';
 };
 
 const config = {
-    apiUrl: getApiUrl()
+    get apiUrl() {
+        const url = getApiUrl();
+        console.log('Returning API URL:', url);
+        return url;
+    }
 };
 
 export default config; 
