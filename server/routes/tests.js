@@ -8,6 +8,14 @@ const { Parser } = require('json2csv');
 router.post('/submit', async (req, res) => {
     try {
         const { user_id, test_period, passed } = req.body;
+        console.log('Received test submission:', { user_id, test_period, passed });
+        
+        // Verify test_period is valid
+        if (test_period !== 'morning' && test_period !== 'evening') {
+            return res.status(400).json({ 
+                error: `Invalid test_period: ${test_period}. Must be 'morning' or 'evening'` 
+            });
+        }
         
         // Verify user exists first
         const userCheck = await pool.query(
