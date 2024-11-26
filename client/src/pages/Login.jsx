@@ -11,26 +11,33 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        // Force config check
-        const hostname = window.location.hostname;
-        const apiUrl = hostname === 'localhost' || hostname === '127.0.0.1'
-            ? 'http://localhost:5001'
-            : 'https://esd-testing-app-production.up.railway.app';
-
-        console.log('Environment check:', {
-            hostname,
-            apiUrl,
-            fullUrl: window.location.href
+        // Force environment detection
+        const currentUrl = new URL(window.location.href);
+        const isRailwayApp = currentUrl.hostname.includes('railway.app');
+        
+        console.log('URL Analysis:', {
+            currentUrl: currentUrl.toString(),
+            hostname: currentUrl.hostname,
+            isRailwayApp,
+            protocol: currentUrl.protocol
         });
 
-        const loginUrl = `${apiUrl}/api/auth/login`;
-        
+        const apiUrl = isRailwayApp
+            ? 'https://esd-testing-app-production.up.railway.app'
+            : 'http://localhost:5001';
+
+        console.log('Selected API URL:', apiUrl);
+
         try {
+            const loginUrl = `${apiUrl}/api/auth/login`;
+            console.log('Attempting login at:', loginUrl);
+
             const response = await fetch(loginUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Origin': window.location.origin
                 },
                 body: JSON.stringify({ email, password })
             });
@@ -46,11 +53,11 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Login error:', {
-                message: err.message,
+            console.error('Login attempt failed:', {
+                error: err.message,
                 type: err.name,
-                loginUrl,
-                hostname: window.location.hostname
+                stack: err.stack,
+                currentUrl: window.location.href
             });
             setError('Login failed: ' + err.message);
         }
