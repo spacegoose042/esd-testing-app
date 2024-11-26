@@ -53,13 +53,22 @@ function Home() {
             return;
         }
 
+        // Convert AM/PM to morning/evening if needed
+        let testPeriod = period;
+        if (period === 'AM' || period === 'AM Test') {
+            testPeriod = 'morning';
+        } else if (period === 'PM' || period === 'PM Test') {
+            testPeriod = 'evening';
+        }
+
         const payload = {
             user_id: userId,
-            test_period: period,
+            test_period: testPeriod,
             passed: testValue === 'PASS'
         };
 
         try {
+            console.log('Submitting payload:', payload); // Debug log
             const response = await fetch('/api/tests/submit', {
                 method: 'POST',
                 headers: {
