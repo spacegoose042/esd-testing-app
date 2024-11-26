@@ -53,12 +53,18 @@ function Home() {
             return;
         }
 
-        console.log('Current period state:', period);
-        console.log('Test value:', testValue);
+        console.log('State before submission:', {
+            userId,
+            period,
+            testValue,
+            periodType: typeof period
+        });
+
+        const validPeriod = period === 'morning' ? 'morning' : 'evening';
         
         const payload = {
             user_id: userId,
-            test_period: period,
+            test_period: validPeriod,
             passed: testValue === 'PASS'
         };
         
