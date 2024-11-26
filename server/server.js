@@ -9,7 +9,7 @@ const testRoutes = require('./routes/tests');
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://esd-testing-app-production.up.railway.app'],
+  origin: ['http://localhost:5001', 'https://esd-testing-app-production.up.railway.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
   credentials: true,
@@ -37,7 +37,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
