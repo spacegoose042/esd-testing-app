@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 function Home() {
     const [userId, setUserId] = useState('');
-    const [period, setPeriod] = useState('AM');
+    const [period, setPeriod] = useState('morning');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [todayTests, setTodayTests] = useState([]);
