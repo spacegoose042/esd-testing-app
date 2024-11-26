@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import config from '../config';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,16 +11,20 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        console.log('Config object:', config);
-        console.log('Window location:', {
-            hostname: window.location.hostname,
-            href: window.location.href,
-            protocol: window.location.protocol
+        // Force config check
+        const hostname = window.location.hostname;
+        const apiUrl = hostname === 'localhost' || hostname === '127.0.0.1'
+            ? 'http://localhost:5001'
+            : 'https://esd-testing-app-production.up.railway.app';
+
+        console.log('Environment check:', {
+            hostname,
+            apiUrl,
+            fullUrl: window.location.href
         });
 
-        const loginUrl = `${config.apiUrl}/api/auth/login`;
-        console.log('Attempting login at URL:', loginUrl);
-
+        const loginUrl = `${apiUrl}/api/auth/login`;
+        
         try {
             const response = await fetch(loginUrl, {
                 method: 'POST',
@@ -33,11 +36,6 @@ function Login() {
             });
 
             const data = await response.json();
-            console.log('Login response:', {
-                status: response.status,
-                ok: response.ok,
-                data
-            });
             
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
