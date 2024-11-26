@@ -12,18 +12,24 @@ function Login() {
         setError('');
 
         try {
-            console.log('Attempting login with:', { email, password: '***' });
-            const response = await fetch('/api/auth/login', {
+            console.log('Starting login attempt...');
+            const url = '/api/auth/login';
+            console.log('Fetching from URL:', url);
+            
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
 
+            console.log('Response status:', response.status);
             const data = await response.json();
-            console.log('Login response:', data);
-
+            console.log('Response data:', data);
+            
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
             }
