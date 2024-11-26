@@ -13,29 +13,6 @@ const testController = {
         }
     },
 
-
-    getTestHistory: async (req, res) => {
-        try {
-            const result = await pool.query(
-                `SELECT 
-                    e.id,
-                    u.first_name || ' ' || u.last_name as name,
-                    e.test_date,
-                    e.test_time,
-                    e.test_period,
-                    e.passed,
-                    e.notes,
-                    e.created_at
-                FROM esd_tests e
-                JOIN users u ON e.user_id = u.id
-                ORDER BY e.created_at DESC`
-            );
-            res.json(result.rows);
-        } catch (err) {
-            console.error('Error fetching test history:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
-    }
 };
 
 module.exports = testController;
