@@ -94,7 +94,7 @@ const authController = {
     verify: async (req, res) => {
         try {
             const token = req.header('Authorization').replace('Bearer ', '');
-            const decoded = jwt.verify(token, 'your-secret-key');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
             const result = await pool.query(
                 'SELECT is_admin FROM users WHERE id = $1',
