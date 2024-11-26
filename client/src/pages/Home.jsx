@@ -61,7 +61,7 @@ function Home() {
                 },
                 body: JSON.stringify({
                     user_id: userId,
-                    test_period: period === 'AM' ? 'AM Test' : 'PM Test',
+                    test_period: period === 'AM' ? 'morning' : 'evening',
                     passed: testValue === 'PASS'
                 })
             });
