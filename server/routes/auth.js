@@ -25,4 +25,29 @@ router.get('/debug', async (req, res) => {
     }
 });
 
+// Add this after your login route
+router.get('/debug/users', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT 
+                id,
+                email,
+                is_admin,
+                CASE WHEN password_hash IS NOT NULL THEN true ELSE false END as has_password
+            FROM users
+            ORDER BY id ASC
+        `);
+        
+        res.json({
+            userCount: result.rows.length,
+            users: result.rows
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message,
+            code: err.code
+        });
+    }
+});
+
 module.exports = router;
