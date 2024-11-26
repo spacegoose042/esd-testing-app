@@ -22,10 +22,7 @@ router.post('/submit', async (req, res) => {
         });
     } catch (err) {
         console.error('Test submission error:', err);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to submit test'
-        });
+        res.status(500).json({ error: 'Failed to submit test' });
     }
 });
 
