@@ -53,20 +53,14 @@ function Home() {
             return;
         }
 
-        // Ensure period is exactly 'morning' or 'evening'
-        if (period !== 'morning' && period !== 'evening') {
-            setError('Invalid test period. Must be morning or evening');
-            return;
-        }
-        
         const payload = {
             user_id: userId,
-            test_period: period,  // Use the period value directly since we've validated it
+            test_period: period,
             passed: testValue === 'PASS'
         };
 
         try {
-            const response = await fetch(`/api/tests/submit`, {
+            const response = await fetch('/api/tests/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
