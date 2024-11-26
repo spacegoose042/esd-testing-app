@@ -50,22 +50,41 @@ const authController = {
 
     register: async (req, res) => {
         try {
-            const { first_name, last_name, email, password, is_admin } = req.body;
-    
+            const { first_name, last_name, manager_email, is_admin, password } = req.body;
+            console.log('Registration attempt:', { first_name, last_name, manager_email, is_admin });
+
             let password_hash = null;
             if (is_admin) {
-                // Only hash password for admin users
+                if (!password) {
+                    return res.status(400).json({ 
+                        error: 'Password required for admin users'
+                    });
+                }
                 const salt = await bcrypt.genSalt(10);
                 password_hash = await bcrypt.hash(password, salt);
             }
-    
-            // Insert user
+
+            // Generate a unique email for non-admin users
+            const email = is_admin ? manager_email : `${first_name.toLowerCase()}.${last_name.toLowerCase()}@company.com`;
+
+            // Insert new user
             const result = await pool.query(
-                'INSERT INTO users (first_name, last_name, email, password_hash, is_admin) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [first_name, last_name, email, password_hash, is_admin]
+                'INSERT INTO users (first_name, last_name, email, manager_email, is_admin, password_hash) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [first_name, last_name, email, manager_email, is_admin, password_hash]
             );
-    
-            res.json({ message: 'User registered successfully' });
+
+            res.json({
+                success: true,
+                message: 'User registered successfully',
+                user: {
+                    id: result.rows[0].id,
+                    first_name: result.rows[0].first_name,
+                    last_name: result.rows[0].last_name,
+                    email: result.rows[0].email,
+                    manager_email: result.rows[0].manager_email,
+                    is_admin: result.rows[0].is_admin
+                }
+            });
         } catch (err) {
             console.error('Registration error:', err);
             res.status(500).json({ error: 'Server error' });
