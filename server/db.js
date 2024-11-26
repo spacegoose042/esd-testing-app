@@ -1,30 +1,42 @@
 const { Pool } = require('pg');
 
-// Construct the connection URL from individual parts if needed
+// Construct database URL from environment variables
 const constructDbUrl = () => {
-    if (process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('${{')) {
-        return process.env.DATABASE_URL;
-    }
+    const dbConfig = {
+        user: process.env.POSTGRES_USER || 'postgres',
+        password: process.env.POSTGRES_PASSWORD,
+        host: 'postgres.railway.internal',
+        port: process.env.PGPORT || 5432,
+        database: process.env.POSTGRES_DB || 'railway'
+    };
     
-    return `postgresql://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@postgres.railway.internal:5432/${process.env.POSTGRES_DB}`;
+    return `postgresql://${dbConfig.user}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`;
 };
 
-console.log('Attempting database connection with:', constructDbUrl().replace(/:[^:\/]+@/, ':****@'));
+const dbUrl = constructDbUrl();
+console.log('Database connection string (masked):', dbUrl.replace(/:[^:\/]+@/, ':****@'));
 
 const pool = new Pool({
-    connectionString: constructDbUrl(),
+    connectionString: dbUrl,
     ssl: {
         rejectUnauthorized: false
     }
 });
 
-// Test the connection
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.error('Database connection error:', err);
-    } else {
-        console.log('Database connected successfully');
+// Test connection immediately
+(async () => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT NOW()');
+        console.log('Database connected successfully at:', result.rows[0].now);
+        client.release();
+    } catch (err) {
+        console.error('Database connection error:', {
+            message: err.message,
+            code: err.code,
+            stack: err.stack
+        });
     }
-});
+})();
 
 module.exports = pool;
