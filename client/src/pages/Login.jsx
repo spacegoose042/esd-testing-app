@@ -14,18 +14,23 @@ function Login() {
 
         try {
             console.log('Starting login attempt...');
+            console.log('Current hostname:', window.location.hostname);
             const url = `${config.apiUrl}/api/auth/login`;
+            console.log('Attempting to fetch from:', url);
             
             console.log('Attempting login with:', { email });
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
             });
 
+            console.log('Response received:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
             
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
@@ -36,7 +41,12 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Login error:', err);
+            console.error('Login error details:', {
+                message: err.message,
+                stack: err.stack,
+                hostname: window.location.hostname,
+                apiUrl: config.apiUrl
+            });
             setError(err.message || 'Login failed');
         }
     };

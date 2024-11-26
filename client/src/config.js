@@ -4,4 +4,7 @@ const config = {
     : 'http://localhost:5001'
 };
 
+console.log('Current hostname:', window.location.hostname);
+console.log('Using API URL:', config.apiUrl);
+
 export default config; 
