@@ -23,6 +23,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tests', testRoutes);
 
+// Add this before your other routes
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -13,16 +13,24 @@ function Login() {
         setError('');
 
         try {
-            const url = `${config.apiUrl}/api/auth/login`;
-            console.log('Attempting fetch to:', url);
+            // First try to reach the health endpoint
+            const healthUrl = `${config.apiUrl}/api/health`;
+            console.log('Checking API health at:', healthUrl);
+            
+            const healthCheck = await fetch(healthUrl);
+            const healthData = await healthCheck.json();
+            console.log('API Health check:', healthData);
 
-            const response = await fetch(url, {
+            // If we get here, the API is reachable, proceed with login
+            const loginUrl = `${config.apiUrl}/api/auth/login`;
+            console.log('Proceeding with login at:', loginUrl);
+
+            const response = await fetch(loginUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                mode: 'cors',
                 body: JSON.stringify({ email, password })
             });
 
@@ -37,11 +45,12 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Login error:', {
+            console.error('Error details:', {
                 message: err.message,
                 type: err.name,
                 url: config.apiUrl,
-                hostname: window.location.hostname
+                hostname: window.location.hostname,
+                stack: err.stack
             });
             setError(err.message || 'Login failed');
         }
