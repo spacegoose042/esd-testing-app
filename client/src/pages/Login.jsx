@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import config from '../config';
+import { API_URL } from '../utils/api';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -14,16 +14,14 @@ function Login() {
 
         try {
             console.log('Starting login attempt...');
-            const url = `${config.apiUrl}/api/auth/login`;
+            const url = `${API_URL}/api/auth/login`;
             
             console.log('Attempting login with:', { email });
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
 
