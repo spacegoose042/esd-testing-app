@@ -15,7 +15,7 @@ function Users() {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
+            const response = await fetch(`/api/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ function Users() {
         if (!window.confirm('Are you sure you want to delete this user?')) return;
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+            const response = await fetch(`/api/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -66,7 +66,7 @@ function Users() {
 
         try {
             const promises = selectedUsers.map(userId =>
-                fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+                fetch(`/api/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

@@ -44,7 +44,7 @@ function History() {
             setLoading(true);
             const token = localStorage.getItem('token');
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/api/tests/history?start_date=${startDate}&end_date=${endDate}`,
+                `/api/tests/history?start_date=${startDate}&end_date=${endDate}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -88,7 +88,7 @@ function History() {
 
             // Export all data
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/api/tests/export?start_date=${startDate}&end_date=${endDate}`,
+                `http://localhost:5001/api/tests/export?start_date=${startDate}&end_date=${endDate}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,

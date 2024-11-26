@@ -11,7 +11,7 @@ function Home() {
     useEffect(() => {
       const token = localStorage.getItem('token');
       // If there's no token, we'll still fetch users but might get a limited list
-      fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
+      fetch(`/api/users`, {
           headers: {
               ...(token && { 'Authorization': `Bearer ${token}` }),
               'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ function Home() {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/tests/submit', {
+            const response = await fetch(`/api/tests/submit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
