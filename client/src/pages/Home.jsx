@@ -53,20 +53,17 @@ function Home() {
             return;
         }
 
-        console.log('Raw period value:', period);
-        console.log('Raw period type:', typeof period);
-        console.log('Period === morning:', period === 'morning');
-        console.log('Period === evening:', period === 'evening');
-
-        const validPeriod = period === 'morning' ? 'morning' : 'evening';
+        // Ensure period is exactly 'morning' or 'evening'
+        if (period !== 'morning' && period !== 'evening') {
+            setError('Invalid test period. Must be morning or evening');
+            return;
+        }
         
         const payload = {
             user_id: userId,
-            test_period: validPeriod,
+            test_period: period,  // Use the period value directly since we've validated it
             passed: testValue === 'PASS'
         };
-        
-        console.log('Final payload:', JSON.stringify(payload));
 
         try {
             const response = await fetch(`/api/tests/submit`, {
@@ -76,8 +73,6 @@ function Home() {
                 },
                 body: JSON.stringify(payload)
             });
-
-            console.log('Raw response:', await response.clone().text());
             
             const data = await response.json();
 
