@@ -40,7 +40,7 @@ function Home() {
 
     const clearForm = () => {
         setUserId('');
-        setPeriod('AM');
+        setPeriod('morning');
         setTodayTests([]);
     };
 
@@ -61,7 +61,7 @@ function Home() {
                 },
                 body: JSON.stringify({
                     user_id: userId,
-                    test_period: period === 'AM' ? 'morning' : 'evening',
+                    test_period: period,
                     passed: testValue === 'PASS'
                 })
             });
@@ -131,29 +131,14 @@ function Home() {
                     </label>
                     <div className="flex justify-center space-x-8 mb-6">
                         <button
-                            onClick={() => setPeriod('AM')}
+                            onClick={() => setPeriod('morning')}
                             className={`py-6 px-12 rounded-lg text-xl font-bold text-white relative ${
-                                period === 'AM' 
+                                period === 'morning' 
                                 ? 'bg-blue-600 hover:bg-blue-700' 
                                 : 'bg-blue-400 hover:bg-blue-500'
                             }`}
                         >
-                            AM Test
-                            {period === 'AM' && (
-                                <svg 
-                                    className="absolute top-2 right-2 h-6 w-6" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth={2} 
-                                        d="M5 13l4 4L19 7" 
-                                    />
-                                </svg>
-                            )}
+                            Morning Test
                         </button>
                         <button
                             onClick={() => setPeriod('PM')}
