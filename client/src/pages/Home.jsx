@@ -53,12 +53,10 @@ function Home() {
             return;
         }
 
-        console.log('State before submission:', {
-            userId,
-            period,
-            testValue,
-            periodType: typeof period
-        });
+        console.log('Raw period value:', period);
+        console.log('Raw period type:', typeof period);
+        console.log('Period === morning:', period === 'morning');
+        console.log('Period === evening:', period === 'evening');
 
         const validPeriod = period === 'morning' ? 'morning' : 'evening';
         
@@ -68,7 +66,7 @@ function Home() {
             passed: testValue === 'PASS'
         };
         
-        console.log('Sending payload:', payload);
+        console.log('Final payload:', JSON.stringify(payload));
 
         try {
             const response = await fetch(`/api/tests/submit`, {
@@ -79,6 +77,8 @@ function Home() {
                 body: JSON.stringify(payload)
             });
 
+            console.log('Raw response:', await response.clone().text());
+            
             const data = await response.json();
 
             if (!response.ok) {
