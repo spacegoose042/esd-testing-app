@@ -229,7 +229,7 @@ function History() {
                     >
                         <option value="">All</option>
                         <option value="morning">Morning</option>
-                        <option value="evening">Afternoon</option>
+                        <option value="evening">Evening</option>
                     </select>
                 </div>
                 <div>

@@ -67,7 +67,7 @@ const checkAfternoonTests = async () => {
                 WHERE t.user_id = u.id
                 AND t.created_at::date = CURRENT_DATE
                 AND t.created_at::time BETWEEN '12:00:00' AND '15:00:00'
-                AND t.test_period = 'PM'
+                AND t.test_period = 'evening'
             )
         `);
 
