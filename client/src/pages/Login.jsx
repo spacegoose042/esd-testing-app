@@ -12,16 +12,18 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        const url = `${config.apiUrl}/api/auth/login`;
-        console.log('Attempting login with:', {
-            url,
-            email,
-            currentHostname: window.location.hostname,
-            apiUrl: config.apiUrl
+        const apiUrl = config.apiUrl;
+        const loginUrl = `${apiUrl}/api/auth/login`;
+
+        console.log('Login attempt details:', {
+            loginUrl,
+            hostname: window.location.hostname,
+            href: window.location.href,
+            apiUrl
         });
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch(loginUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ function Login() {
             console.error('Login error:', {
                 message: err.message,
                 type: err.name,
-                url,
+                loginUrl,
                 hostname: window.location.hostname
             });
             setError('Login failed: ' + err.message);

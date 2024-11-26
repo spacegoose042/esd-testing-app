@@ -1,18 +1,24 @@
-const hostname = window.location.hostname;
-const isProduction = hostname.includes('railway.app');
+const getApiUrl = () => {
+    const hostname = window.location.hostname;
+    const isLocalhost = hostname === 'localhost';
+    
+    console.log('URL Detection:', {
+        hostname,
+        isLocalhost,
+        fullUrl: window.location.href,
+        protocol: window.location.protocol
+    });
 
-console.log('Environment detection:', {
-    hostname,
-    isProduction,
-    fullUrl: window.location.href
-});
+    const apiUrl = isLocalhost
+        ? 'http://localhost:5001'
+        : 'https://esd-testing-app-production.up.railway.app';
 
-const config = {
-    apiUrl: isProduction
-        ? 'https://esd-testing-app-production.up.railway.app'
-        : 'http://localhost:5001'
+    console.log('Selected API URL:', apiUrl);
+    return apiUrl;
 };
 
-console.log('Using API URL:', config.apiUrl);
+const config = {
+    apiUrl: getApiUrl()
+};
 
 export default config; 
