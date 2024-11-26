@@ -34,7 +34,7 @@ const authController = {
             // Create token
             const token = jwt.sign(
                 { id: user.id, isAdmin: user.is_admin },
-                'your-secret-key', // You should use an environment variable for this
+                process.env.JWT_SECRET,
                 { expiresIn: '1d' }
             );
 
