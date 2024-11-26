@@ -9,7 +9,7 @@ const testRoutes = require('./routes/tests');
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://your-client-domain.railway.app'],
+  origin: ['http://localhost:3000', 'https://esd-testing-app-production.up.railway.app'],
   credentials: true
 }));
 app.use(express.json());

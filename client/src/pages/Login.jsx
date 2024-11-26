@@ -14,9 +14,10 @@ function Login() {
         try {
             console.log('Starting login attempt...');
             const baseUrl = import.meta.env.PROD ? 
-                'https://esd-testing-app-production.up.railway.app/' : '';
+                'https://esd-testing-app-production.up.railway.app' : '';
             const url = `${baseUrl}/api/auth/login`;
             
+            console.log('Attempting login with:', { email });
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -27,9 +28,7 @@ function Login() {
                 body: JSON.stringify({ email, password })
             });
 
-            console.log('Response status:', response.status);
             const data = await response.json();
-            console.log('Response data:', data);
             
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
