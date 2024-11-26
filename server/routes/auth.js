@@ -17,20 +17,15 @@ router.post('/login', async (req, res) => {
         );
 
         if (user.rows.length === 0) {
+            console.log('No user found with email:', email);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const validPassword = await bcrypt.compare(
-            password,
-            user.rows[0].password_hash
-        );
+        const validPassword = await bcrypt.compare(password, user.rows[0].password_hash);
+        console.log('Password validation result:', validPassword);
 
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        if (!user.rows[0].is_admin) {
-            return res.status(401).json({ error: 'Not authorized as admin' });
         }
 
         const token = jwt.sign(
@@ -38,7 +33,7 @@ router.post('/login', async (req, res) => {
                 id: user.rows[0].id,
                 isAdmin: user.rows[0].is_admin 
             },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || 'your-secret-key',
             { expiresIn: '1d' }
         );
 

@@ -21,7 +21,6 @@ function Login() {
                 body: JSON.stringify({ email, password })
             });
 
-            console.log('Response status:', response.status);
             const data = await response.json();
             console.log('Login response:', data);
 
@@ -29,16 +28,13 @@ function Login() {
                 throw new Error(data.error || 'Failed to login');
             }
 
-            // Store the token
             localStorage.setItem('token', data.token);
-            
-            // Redirect to home page
             navigate('/');
             window.location.reload();
 
         } catch (err) {
             console.error('Login error:', err);
-            setError(err.message);
+            setError(err.message || 'Login failed');
         }
     };
 
