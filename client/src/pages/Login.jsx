@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -11,44 +11,33 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        const currentUrl = new URL(window.location.href);
-        const apiUrl = currentUrl.hostname.includes('railway.app')
-            ? 'https://esd-testing-app-production.up.railway.app'
-            : 'http://localhost:5001';
-
         try {
-            // First check if server is reachable
-            const healthCheck = await fetch(`${apiUrl}/api/health`);
-            if (!healthCheck.ok) {
-                throw new Error('Server is not responding');
-            }
-
-            const loginUrl = `${apiUrl}/api/auth/login`;
-            const response = await fetch(loginUrl, {
+            const response = await fetch(`${config.apiUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to login');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Login failed');
             }
 
+            const data = await response.json();
             localStorage.setItem('token', data.token);
             navigate('/');
             window.location.reload();
 
         } catch (err) {
-            console.error('Login error:', {
-                message: err.message,
+            console.error('Login failed:', {
+                error: err.message,
                 type: err.name,
-                stack: err.stack
+                url: config.apiUrl
             });
-            setError(`Connection failed: ${err.message}`);
+            setError('Login failed: ' + err.message);
         }
     };
 
