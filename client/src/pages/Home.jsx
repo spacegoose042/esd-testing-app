@@ -53,6 +53,8 @@ function Home() {
             return;
         }
 
+        console.log('Submitting test with period:', period);
+
         try {
             const response = await fetch(`/api/tests/submit`, {
                 method: 'POST',
