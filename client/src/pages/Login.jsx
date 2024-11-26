@@ -12,9 +12,8 @@ function Login() {
         setError('');
 
         try {
-            console.log('Attempting login with:', { email }); // Debug log
-
-            const response = await fetch('http://localhost:5001/api/auth/login', {
+            console.log('Attempting login with:', { email, password: '***' });
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -22,21 +21,12 @@ function Login() {
                 body: JSON.stringify({ email, password })
             });
 
-            // Log the raw response for debugging
-            const rawResponse = await response.text();
-            console.log('Raw response:', rawResponse);
-
-            // Try to parse as JSON
-            let data;
-            try {
-                data = JSON.parse(rawResponse);
-            } catch (parseError) {
-                console.error('Failed to parse response as JSON:', parseError);
-                throw new Error('Server returned invalid JSON');
-            }
+            console.log('Response status:', response.status);
+            const data = await response.json();
+            console.log('Login response:', data);
 
             if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+                throw new Error(data.error || 'Failed to login');
             }
 
             // Store the token
@@ -48,7 +38,7 @@ function Login() {
 
         } catch (err) {
             console.error('Login error:', err);
-            setError(err.message || 'Login failed');
+            setError(err.message);
         }
     };
 
