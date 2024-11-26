@@ -53,6 +53,8 @@ function Home() {
             return;
         }
 
+        console.log('Initial period value:', period);
+
         // Convert AM/PM to morning/evening if needed
         let testPeriod = period;
         if (period === 'AM' || period === 'AM Test') {
@@ -61,11 +63,15 @@ function Home() {
             testPeriod = 'evening';
         }
 
+        console.log('Final testPeriod value:', testPeriod);
+
         const payload = {
             user_id: userId,
             test_period: testPeriod,
             passed: testValue === 'PASS'
         };
+
+        console.log('Final payload:', payload);
 
         try {
             console.log('Submitting payload:', payload); // Debug log
