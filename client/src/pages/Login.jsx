@@ -12,34 +12,21 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        // Add these debug logs
-        console.log('Debug Location Info:', {
-            currentUrl: window.location.href,
-            hostname: window.location.hostname,
-            protocol: window.location.protocol,
-            apiUrl: config.apiUrl,
-            isRailwayApp: window.location.hostname.includes('railway.app')
-        });
-
         try {
-            console.log('Starting login attempt...');
-            console.log('Current hostname:', window.location.hostname);
             const url = `${config.apiUrl}/api/auth/login`;
-            console.log('Attempting to fetch from:', url);
-            
-            console.log('Attempting login with:', { email });
+            console.log('Attempting fetch to:', url);
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
+                mode: 'cors',
                 body: JSON.stringify({ email, password })
             });
 
-            console.log('Response received:', response.status);
             const data = await response.json();
-            console.log('Response data:', data);
             
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to login');
@@ -50,11 +37,11 @@ function Login() {
             window.location.reload();
 
         } catch (err) {
-            console.error('Login error details:', {
+            console.error('Login error:', {
                 message: err.message,
-                stack: err.stack,
-                hostname: window.location.hostname,
-                apiUrl: config.apiUrl
+                type: err.name,
+                url: config.apiUrl,
+                hostname: window.location.hostname
             });
             setError(err.message || 'Login failed');
         }

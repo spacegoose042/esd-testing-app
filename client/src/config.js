@@ -1,12 +1,17 @@
 const config = {
   apiUrl: window.location.hostname === 'localhost'
     ? 'http://localhost:5001'
-    : 'https://esd-testing-app-production.up.railway.app'
+    : window.location.protocol + '//esd-testing-app-production.up.railway.app'
 };
 
-console.log('Config initialized with:', {
-  hostname: window.location.hostname,
-  apiUrl: config.apiUrl
-});
+// Add debug logging
+const debugInfo = {
+  currentHostname: window.location.hostname,
+  currentProtocol: window.location.protocol,
+  selectedApiUrl: config.apiUrl,
+  fullCurrentUrl: window.location.href
+};
+
+console.log('Config Debug Info:', debugInfo);
 
 export default config; 
