@@ -14,15 +14,15 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'public')));
-
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tests', testRoutes);
 
-// Handle React routing, return all requests to React app
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Catch-all route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
