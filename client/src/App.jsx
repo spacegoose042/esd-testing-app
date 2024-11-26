@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Users from './pages/Users';
 import { useState, useEffect } from 'react';
-import { getBaseUrl } from './utils/api';
+import config from './config';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -16,7 +16,7 @@ function App() {
       if (token) {
         try {
           console.log('Checking admin status...'); // Debug log
-          const response = await fetch(`${getBaseUrl()}/api/auth/verify`, {
+          const response = await fetch(`${config.apiUrl}/api/auth/verify`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

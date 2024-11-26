@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import config from '../config';
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -34,10 +35,7 @@ function Register() {
         }
 
         try {
-            const baseUrl = window.location.hostname === 'localhost' ? 
-                'http://localhost:5001' : 
-                'https://esd-testing-app-production.up.railway.app';
-            const url = `${baseUrl}/api/auth/register`;
+            const url = `${config.apiUrl}/api/auth/register`;
             
             const response = await fetch(url, {
                 method: 'POST',

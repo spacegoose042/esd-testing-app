@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../utils/api';
+import config from '../config';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ function Login() {
 
         try {
             console.log('Starting login attempt...');
-            const url = `${API_URL}/api/auth/login`;
+            const url = `${config.apiUrl}/api/auth/login`;
             
             console.log('Attempting login with:', { email });
             const response = await fetch(url, {
