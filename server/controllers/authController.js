@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
 
-const authController = {
-    login: async (req, res) => {
+class AuthController {
+    async login(req, res) {
         try {
             const { email, password } = req.body;
             console.log('Login attempt for:', email);
@@ -52,6 +52,6 @@ const authController = {
             res.status(500).json({ error: 'Server error during login' });
         }
     }
-};
+}
 
-module.exports = authController;
+module.exports = new AuthController();
