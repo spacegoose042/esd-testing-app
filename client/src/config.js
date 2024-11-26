@@ -1,10 +1,13 @@
-const config = {
-  apiUrl: window.location.hostname.includes('railway.app')
+const isRailwayApp = window.location.hostname.includes('railway.app');
+const apiUrl = isRailwayApp 
     ? 'https://esd-testing-app-production.up.railway.app'
-    : 'http://localhost:5001'
-};
+    : 'http://localhost:5001';
 
-console.log('Current hostname:', window.location.hostname);
-console.log('Using API URL:', config.apiUrl);
+console.log('Config Debug:', {
+    hostname: window.location.hostname,
+    isRailwayApp,
+    apiUrl
+});
 
+const config = { apiUrl };
 export default config; 

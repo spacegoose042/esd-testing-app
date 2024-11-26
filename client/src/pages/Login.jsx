@@ -12,13 +12,13 @@ function Login() {
         e.preventDefault();
         setError('');
 
-        // Debug location information
-        console.log('Location Debug Info:', {
+        // Add these debug logs
+        console.log('Debug Location Info:', {
+            currentUrl: window.location.href,
             hostname: window.location.hostname,
-            href: window.location.href,
-            origin: window.location.origin,
-            host: window.location.host,
-            pathname: window.location.pathname
+            protocol: window.location.protocol,
+            apiUrl: config.apiUrl,
+            isRailwayApp: window.location.hostname.includes('railway.app')
         });
 
         try {
