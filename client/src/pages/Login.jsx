@@ -13,8 +13,9 @@ function Login() {
 
         try {
             console.log('Starting login attempt...');
-            const url = '/api/auth/login';
-            console.log('Fetching from URL:', url);
+            const baseUrl = import.meta.env.PROD ? 
+                'https://esd-testing-app-production.up.railway.app/' : '';
+            const url = `${baseUrl}/api/auth/login`;
             
             const response = await fetch(url, {
                 method: 'POST',
