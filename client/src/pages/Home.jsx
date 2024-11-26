@@ -53,28 +53,20 @@ function Home() {
             return;
         }
 
-        console.log('Initial period value:', period);
-
-        // Convert AM/PM to morning/evening if needed
-        let testPeriod = period;
-        if (period === 'AM' || period === 'AM Test') {
-            testPeriod = 'morning';
-        } else if (period === 'PM' || period === 'PM Test') {
-            testPeriod = 'evening';
-        }
-
-        console.log('Final testPeriod value:', testPeriod);
+        // Debug logs
+        console.log('Button clicked with testValue:', testValue);
+        console.log('Current period state:', period);
+        console.log('Current userId state:', userId);
 
         const payload = {
             user_id: userId,
-            test_period: testPeriod,
+            test_period: period,  // Use period directly without any transformation
             passed: testValue === 'PASS'
         };
 
-        console.log('Final payload:', payload);
+        console.log('Sending payload:', payload);
 
         try {
-            console.log('Submitting payload:', payload); // Debug log
             const response = await fetch('/api/tests/submit', {
                 method: 'POST',
                 headers: {
@@ -84,6 +76,7 @@ function Home() {
             });
             
             const data = await response.json();
+            console.log('Server response:', data);
 
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to submit test');
@@ -96,6 +89,7 @@ function Home() {
             }, 2000);
 
         } catch (err) {
+            console.error('Error in handleSubmit:', err);
             setError(err.message);
         }
     };
