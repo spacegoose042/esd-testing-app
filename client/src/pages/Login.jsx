@@ -12,6 +12,15 @@ function Login() {
         e.preventDefault();
         setError('');
 
+        // Debug location information
+        console.log('Location Debug Info:', {
+            hostname: window.location.hostname,
+            href: window.location.href,
+            origin: window.location.origin,
+            host: window.location.host,
+            pathname: window.location.pathname
+        });
+
         try {
             console.log('Starting login attempt...');
             console.log('Current hostname:', window.location.hostname);
