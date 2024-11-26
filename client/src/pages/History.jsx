@@ -228,8 +228,8 @@ function History() {
                         className="shadow border rounded py-2 px-3"
                     >
                         <option value="">All</option>
-                        <option value="AM Test">Morning</option>
-                        <option value="PM Test">Afternoon</option>
+                        <option value="morning">Morning</option>
+                        <option value="evening">Afternoon</option>
                     </select>
                 </div>
                 <div>
