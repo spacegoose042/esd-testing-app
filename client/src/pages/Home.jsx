@@ -141,15 +141,15 @@ function Home() {
                             Morning Test
                         </button>
                         <button
-                            onClick={() => setPeriod('PM')}
+                            onClick={() => setPeriod('evening')}
                             className={`py-6 px-12 rounded-lg text-xl font-bold text-white relative ${
-                                period === 'PM' 
+                                period === 'evening' 
                                 ? 'bg-purple-600 hover:bg-purple-700' 
                                 : 'bg-purple-400 hover:bg-purple-500'
                             }`}
                         >
                             PM Test
-                            {period === 'PM' && (
+                            {period === 'evening' && (
                                 <svg 
                                     className="absolute top-2 right-2 h-6 w-6" 
                                     fill="none" 
