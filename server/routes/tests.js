@@ -9,6 +9,16 @@ router.post('/submit', async (req, res) => {
     try {
         const { user_id, test_period, passed } = req.body;
         
+        // Verify user exists first
+        const userCheck = await pool.query(
+            'SELECT id FROM users WHERE id = $1',
+            [user_id]
+        );
+
+        if (userCheck.rows.length === 0) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+
         // Insert test result
         const result = await pool.query(
             'INSERT INTO esd_tests (user_id, test_period, passed, test_date, test_time) VALUES ($1, $2, $3, CURRENT_DATE, CURRENT_TIME) RETURNING *',
@@ -32,7 +42,7 @@ router.post('/submit', async (req, res) => {
         });
     } catch (err) {
         console.error('Test submission error:', err);
-        res.status(500).json({ error: 'Failed to submit test' });
+        res.status(500).json({ error: 'Failed to submit test: ' + err.message });
     }
 });
 
