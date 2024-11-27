@@ -1,18 +1,12 @@
-[phases.setup]
-nixPkgs = ['nodejs']
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd client && npm install && npm run build"
 
-[phases.install]
-cmds = [
-  'cd client && npm install',
-  'cd ../server && npm install'
-]
+[deploy]
+startCommand = "cd server && npm install && npm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
 
-[phases.build]
-cmds = [
-  'mkdir -p server/public',
-  'cd client && npm run build',
-  'cp -r client/dist/* server/public/'
-]
-
-[start]
-cmd = 'cd server && npm start'
+[variables]
+VITE_API_URL = "https://esd-testing-app-production.up.railway.app"
+NODE_ENV = "production"
