@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import config from '../config';
+import { login as authLogin } from '../services/auth';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,24 +14,10 @@ function Login() {
         setError('');
 
         try {
-            const response = await fetch(`${config.apiUrl}/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Login failed');
-            }
-
-            const data = await response.json();
+            const data = await authLogin(email, password);
             localStorage.setItem('token', data.token);
             navigate('/');
             window.location.reload();
-
         } catch (err) {
             console.error('Login failed:', {
                 error: err.message,
