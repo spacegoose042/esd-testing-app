@@ -7,14 +7,15 @@ function Navbar({ isAdmin }) {
         <div className="flex space-x-4">
           <Link to="/" className="text-white hover:text-gray-300">Home</Link>
           <Link to="/history" className="text-white hover:text-gray-300">History</Link>
+          {isAdmin && (
+            <>
+              <Link to="/users" className="text-white hover:text-gray-300">Users</Link>
+              <Link to="/register" className="text-white hover:text-gray-300">Register</Link>
+            </>
+          )}
         </div>
         <div className="flex space-x-4">
           <Link to="/login" className="text-white hover:text-gray-300">Admin Login</Link>
-          {isAdmin && (
-            <Link to="/register" className="text-white hover:text-gray-300">
-              Register
-            </Link>
-          )}
         </div>
       </div>
     </nav>
