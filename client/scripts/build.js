@@ -17,9 +17,10 @@ async function buildApp() {
     const modifiedTemplate = template.replace(
       /<script>\s*window\.__APP_CONFIG__[^<]+<\/script>/,
       `<script>
-      window.__APP_CONFIG__ = {
-        apiUrl: window.location.origin
-      };
+        window.__APP_CONFIG__ = {
+          apiUrl: window.location.origin,
+          isProduction: true
+        };
       </script>`
     );
 

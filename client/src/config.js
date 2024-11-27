@@ -1,7 +1,5 @@
 const config = {
-    apiUrl: window.location.hostname.includes('railway.app') || window.location.hostname === 'localhost'
-        ? window.location.origin
-        : import.meta.env.VITE_API_URL,
+    apiUrl: window.location.origin,
     isProduction: import.meta.env.MODE === 'production'
 };
 
