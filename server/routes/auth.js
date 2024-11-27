@@ -6,6 +6,9 @@ const pool = require('../db');
 // Login route
 router.post('/login', authController.login);
 
+// Register route
+router.post('/register', authController.register);
+
 // Debug route - remove in production
 router.get('/debug', async (req, res) => {
     try {

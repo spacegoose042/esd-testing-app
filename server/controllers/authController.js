@@ -93,6 +93,42 @@ class AuthController {
             res.status(401).json({ isAdmin: false });
         }
     }
+
+    async register(req, res) {
+        try {
+            const { first_name, last_name, manager_email, is_admin, email, password } = req.body;
+            
+            // Hash the password if provided
+            let passwordHash = null;
+            if (password) {
+                const salt = await bcrypt.genSalt(10);
+                passwordHash = await bcrypt.hash(password, salt);
+            }
+
+            // Insert the new user
+            const result = await pool.query(
+                `INSERT INTO users 
+                (first_name, last_name, manager_email, is_admin, email, password_hash) 
+                VALUES ($1, $2, $3, $4, $5, $6) 
+                RETURNING id, email, is_admin`,
+                [first_name, last_name, manager_email, is_admin, email, passwordHash]
+            );
+
+            const user = result.rows[0];
+            res.json({ 
+                message: 'User registered successfully',
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    isAdmin: user.is_admin
+                }
+            });
+
+        } catch (err) {
+            console.error('Registration error:', err);
+            res.status(500).json({ error: 'Server error during registration' });
+        }
+    }
 }
 
 module.exports = new AuthController();
