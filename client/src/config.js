@@ -1,13 +1,10 @@
-const config = window.__APP_CONFIG__ || {
+const defaultConfig = {
     apiUrl: window.location.origin,
-    isProduction: import.meta.env.MODE === 'production'
+    isProduction: true
 };
 
-console.log('Config initialized:', {
-    apiUrl: config.apiUrl,
-    environment: import.meta.env.MODE,
-    hostname: window.location.hostname,
-    buildTime: new Date().toISOString()
-});
+const config = window.__APP_CONFIG__ || defaultConfig;
+
+console.log('Config initialized:', config);
 
 export default config; 
