@@ -1,10 +1,11 @@
 const config = {
-    apiUrl: 'https://esd-testing-app-production.up.railway.app'
+    apiUrl: import.meta.env.VITE_API_URL || 'https://esd-testing-app-production.up.railway.app'
 };
 
-window.addEventListener('load', () => {
-    console.log('Window loaded');
-    console.log('Using API_URL:', config.apiUrl);
+console.log('Config initialized:', {
+    apiUrl: config.apiUrl,
+    environment: import.meta.env.MODE,
+    timestamp: new Date().toISOString()
 });
 
 export default config; 
