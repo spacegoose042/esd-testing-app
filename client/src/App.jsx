@@ -21,18 +21,23 @@ function App() {
       try {
         const response = await fetch(`${window.__APP_CONFIG__.apiUrl}/api/auth/verify`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
           }
         });
         
-        const data = await response.json();
-        
-        if (response.ok && data.isAdmin) {
-          setIsAdmin(true);
-        } else {
-          localStorage.removeItem('token');
-          setIsAdmin(false);
+        if (!response.ok) {
+          throw new Error('Failed to verify admin status');
         }
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Invalid response format');
+        }
+
+        const data = await response.json();
+        setIsAdmin(data.isAdmin === true);
       } catch (err) {
         console.error('Error verifying admin status:', err);
         localStorage.removeItem('token');

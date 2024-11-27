@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
 
 function Navbar({ isAdmin }) {
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.reload();
+  };
+
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -15,7 +20,11 @@ function Navbar({ isAdmin }) {
           )}
         </div>
         <div className="flex space-x-4">
-          <Link to="/login" className="text-white hover:text-gray-300">Admin Login</Link>
+          {!localStorage.getItem('token') ? (
+            <Link to="/login" className="text-white hover:text-gray-300">Admin Login</Link>
+          ) : (
+            <button onClick={handleLogout} className="text-white hover:text-gray-300">Logout</button>
+          )}
         </div>
       </div>
     </nav>
