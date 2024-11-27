@@ -4,27 +4,28 @@ import path from 'path';
 
 async function buildApp() {
   try {
-    // 1. Run Vite build
+    // Run Vite build
     await executeCommand('vite build');
 
-    // 2. Read the template
-    const template = await fs.readFile(
-      path.resolve('index.html'),
+    // Read the generated dist/index.html
+    const distTemplate = await fs.readFile(
+      path.resolve('../server/public/index.html'),
       'utf-8'
     );
 
-    // 3. Modify the config script
-    const modifiedTemplate = template.replace(
-      /<script>\s*window\.__APP_CONFIG__[^<]+<\/script>/,
-      `<script>
-        window.__APP_CONFIG__ = {
-          apiUrl: window.location.origin,
-          isProduction: true
-        };
-      </script>`
+    // Modify the config script
+    const modifiedTemplate = distTemplate.replace(
+      /<head>/,
+      `<head>
+        <script>
+          window.__APP_CONFIG__ = {
+            apiUrl: window.location.origin,
+            isProduction: true
+          };
+        </script>`
     );
 
-    // 4. Write to server/public/index.html
+    // Write back to server/public/index.html
     await fs.writeFile(
       path.resolve('../server/public/index.html'),
       modifiedTemplate
