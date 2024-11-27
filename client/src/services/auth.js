@@ -1,25 +1,18 @@
 import config from '../config';
 
-// Force production URL for login endpoint
-const LOGIN_URL = 'https://esd-testing-app-production.up.railway.app/api/auth/login';
-
-console.log('Auth service initialization:', {
-    configObject: config,
-    apiUrl: config.apiUrl,
-    loginUrl: LOGIN_URL,
-    timestamp: new Date().toISOString()
-});
-
 export const login = async (email, password) => {
+    const loginEndpoint = `${config.apiUrl}/api/auth/login`;
+    
     console.log('Login attempt details:', {
         email,
-        targetUrl: LOGIN_URL,
+        targetUrl: loginEndpoint,
         configState: config,
+        environment: import.meta.env.MODE,
         timestamp: new Date().toISOString()
     });
     
     try {
-        const response = await fetch(LOGIN_URL, {
+        const response = await fetch(loginEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +31,7 @@ export const login = async (email, password) => {
             error: error.message,
             type: error.name,
             config: config,
-            url: LOGIN_URL,
+            url: loginEndpoint,
             timestamp: new Date().toISOString()
         });
         throw error;
