@@ -14,7 +14,7 @@ async function buildApp() {
       /<script>\s*window\.__APP_CONFIG__[^<]+<\/script>/,
       `<script>
         window.__APP_CONFIG__ = {
-          apiUrl: window.location.origin,
+          apiUrl: 'https://esd-testing-app-production.up.railway.app',
           isProduction: true
         };
       </script>`
