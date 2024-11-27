@@ -1,13 +1,15 @@
 import config from '../config';
 
 export const login = async (email, password) => {
-    const loginEndpoint = `${config.apiUrl}/api/auth/login`;
+    // Force production URL and log the attempt
+    const BASE_URL = 'https://esd-testing-app-production.up.railway.app';
+    const loginEndpoint = `${BASE_URL}/api/auth/login`;
     
     console.log('Login attempt details:', {
         email,
         targetUrl: loginEndpoint,
         configState: config,
-        environment: import.meta.env.MODE,
+        baseUrl: BASE_URL,
         timestamp: new Date().toISOString()
     });
     
@@ -17,7 +19,8 @@ export const login = async (email, password) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -27,13 +30,7 @@ export const login = async (email, password) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Login error details:', {
-            error: error.message,
-            type: error.name,
-            config: config,
-            url: loginEndpoint,
-            timestamp: new Date().toISOString()
-        });
+        console.error('Login error details:', error);
         throw error;
     }
 }; 
