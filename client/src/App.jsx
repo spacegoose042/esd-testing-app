@@ -5,7 +5,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Users from './pages/Users';
 import { useState, useEffect } from 'react';
-import config from './config';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -16,7 +15,8 @@ function App() {
       if (token) {
         try {
           console.log('Checking admin status...'); // Debug log
-          const response = await fetch(`${config.apiUrl}/api/auth/verify`, {
+          const apiUrl = window.appConfig?.apiUrl || 'https://esd-testing-app-production.up.railway.app';
+          const response = await fetch(`${apiUrl}/api/auth/verify`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
