@@ -4,32 +4,37 @@ import path from 'path';
 
 async function buildApp() {
   try {
-    // Run Vite build
-    await executeCommand('vite build');
-
-    // Read the generated dist/index.html
-    const distTemplate = await fs.readFile(
-      path.resolve('../server/public/index.html'),
+    // First modify the source index.html
+    const sourceTemplate = await fs.readFile(
+      path.resolve('index.html'),
       'utf-8'
     );
 
-    // Modify the config script
-    const modifiedTemplate = distTemplate.replace(
-      /<head>/,
-      `<head>
-        <script>
-          window.__APP_CONFIG__ = {
-            apiUrl: window.location.origin,
-            isProduction: true
-          };
-        </script>`
+    const modifiedSource = sourceTemplate.replace(
+      /<script>\s*window\.__APP_CONFIG__[^<]+<\/script>/,
+      `<script>
+        window.__APP_CONFIG__ = {
+          apiUrl: window.location.origin,
+          isProduction: true
+        };
+      </script>`
     );
 
-    // Write back to server/public/index.html
+    // Write modified source temporarily
     await fs.writeFile(
-      path.resolve('../server/public/index.html'),
-      modifiedTemplate
+      path.resolve('index.html.tmp'),
+      modifiedSource
     );
+
+    // Rename files
+    await fs.rename(path.resolve('index.html'), path.resolve('index.html.bak'));
+    await fs.rename(path.resolve('index.html.tmp'), path.resolve('index.html'));
+
+    // Run Vite build
+    await executeCommand('vite build');
+
+    // Restore original index.html
+    await fs.rename(path.resolve('index.html.bak'), path.resolve('index.html'));
 
     console.log('Build completed successfully!');
   } catch (error) {
