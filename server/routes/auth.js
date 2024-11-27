@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const pool = require('../db');
+const auth = require('../middleware/auth');
 
 // Login route
 router.post('/login', authController.login);
 
 // Register route
-router.post('/register', authController.register);
+router.post('/register', auth, authController.register);
 
 // Debug route - remove in production
 router.get('/debug', async (req, res) => {

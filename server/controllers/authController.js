@@ -125,8 +125,13 @@ class AuthController {
             });
 
         } catch (err) {
-            console.error('Registration error:', err);
-            res.status(500).json({ error: 'Server error during registration' });
+            console.error('Registration error details:', {
+                name: err.name,
+                message: err.message,
+                code: err.code,
+                stack: err.stack?.split('\n')
+            });
+            res.status(500).json({ error: err.message || 'Server error during registration' });
         }
     }
 }
