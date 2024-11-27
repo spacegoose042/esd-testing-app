@@ -10,6 +10,7 @@
 .env.production
 server/.env
 client/.env
+client/console logs
 
 # Debug logs
 npm-debug.log*

@@ -1,5 +1,7 @@
 const config = {
-    apiUrl: import.meta.env.VITE_API_URL || 'https://esd-testing-app-production.up.railway.app'
+    apiUrl: import.meta.env.PROD 
+        ? 'https://esd-testing-app-production.up.railway.app'
+        : 'http://localhost:5001'
 };
 
 console.log('Config initialized:', {
