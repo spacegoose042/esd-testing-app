@@ -11,7 +11,7 @@ function Home() {
     useEffect(() => {
       const token = localStorage.getItem('token');
       // If there's no token, we'll still fetch users but might get a limited list
-      fetch(`${config.apiUrl}/api/users`, {
+      fetch(`${window.__APP_CONFIG__.apiUrl}/api/users`, {
           headers: {
               ...(token && { 'Authorization': `Bearer ${token}` }),
               'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ function Home() {
         console.log('Sending payload:', payload);
 
         try {
-            const response = await fetch(`${config.apiUrl}/api/tests/submit`, {
+            const response = await fetch(`${window.__APP_CONFIG__.apiUrl}/api/tests/submit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
