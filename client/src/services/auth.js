@@ -1,13 +1,13 @@
-import API_URL from '../config';
+import config from '../config';
 
-console.log('Auth service loaded, API_URL:', API_URL);
+console.log('Auth service loaded, API_URL:', config.apiUrl);
 
 export const login = async (email, password) => {
     console.log('Login called with email:', email);
-    console.log('Will attempt to connect to:', `${API_URL}/api/auth/login`);
+    console.log('Will attempt to connect to:', `${config.apiUrl}/api/auth/login`);
     
     try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
+        const response = await fetch(`${config.apiUrl}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +16,8 @@ export const login = async (email, password) => {
         });
 
         if (!response.ok) {
-            throw new Error('Login failed');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Login failed');
         }
 
         return await response.json();

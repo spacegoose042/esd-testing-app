@@ -12,7 +12,8 @@ const corsOptions = {
   origin: [
     'http://localhost:5001',
     'https://esd-testing-app-production.up.railway.app',
-    'https://esd-testing-app-production.up.railway.app/'
+    'http://localhost:5173',
+    'http://localhost:3000'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
