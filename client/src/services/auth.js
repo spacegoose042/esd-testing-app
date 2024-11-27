@@ -1,10 +1,18 @@
 import config from '../config';
 
-console.log('Auth service loaded, API_URL:', config.apiUrl);
+console.log('Auth service initialization:', {
+    configObject: config,
+    apiUrl: config.apiUrl,
+    timestamp: new Date().toISOString()
+});
 
 export const login = async (email, password) => {
-    console.log('Login called with email:', email);
-    console.log('Will attempt to connect to:', `${config.apiUrl}/api/auth/login`);
+    console.log('Login attempt details:', {
+        email,
+        targetUrl: `${config.apiUrl}/api/auth/login`,
+        configState: config,
+        timestamp: new Date().toISOString()
+    });
     
     try {
         const response = await fetch(`${config.apiUrl}/api/auth/login`, {
@@ -22,7 +30,12 @@ export const login = async (email, password) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error details:', {
+            error: error.message,
+            type: error.name,
+            config: config,
+            timestamp: new Date().toISOString()
+        });
         throw error;
     }
 }; 
