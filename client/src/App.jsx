@@ -15,7 +15,7 @@ function App() {
       if (token) {
         try {
           console.log('Checking admin status...'); // Debug log
-          const apiUrl = window.appConfig?.apiUrl || 'https://esd-testing-app-production.up.railway.app';
+          const apiUrl = window.__APP_CONFIG__.apiUrl || 'https://esd-testing-app-production.up.railway.app';
           const response = await fetch(`${apiUrl}/api/auth/verify`, {
             headers: {
               'Authorization': `Bearer ${token}`

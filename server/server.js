@@ -11,13 +11,11 @@ const app = express();
 const corsOptions = {
   origin: [
     'https://esd-testing-app-production.up.railway.app',
-    'http://localhost:5173',
-    /\.railway\.app$/
+    'http://localhost:5173'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));

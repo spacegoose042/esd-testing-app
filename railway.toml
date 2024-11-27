@@ -8,5 +8,4 @@ healthcheckPath = "/api/health"
 healthcheckTimeout = 100
 
 [variables]
-VITE_API_URL = "https://esd-testing-app-production.up.railway.app"
 NODE_ENV = "production"
