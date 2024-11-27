@@ -50,4 +50,26 @@ router.get('/debug/users', async (req, res) => {
     }
 });
 
+router.get('/health', async (req, res) => {
+    try {
+        // Test database connection
+        const dbTest = await pool.query('SELECT NOW()');
+        
+        res.json({
+            status: 'healthy',
+            database: 'connected',
+            timestamp: dbTest.rows[0].now,
+            environment: {
+                hasJwtSecret: !!process.env.JWT_SECRET,
+                nodeEnv: process.env.NODE_ENV
+            }
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'unhealthy',
+            error: err.message
+        });
+    }
+});
+
 module.exports = router;
