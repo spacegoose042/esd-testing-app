@@ -6,7 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ESD-Testing-App</title>
     <base href="/" />
-    <script type="module" crossorigin src="/assets/index-CTNV5RL6.js"></script>
+    <script>
+      window.__APP_CONFIG__ = {
+        apiUrl: window.location.hostname.includes('railway.app')
+          ? 'https://esd-testing-app-production.up.railway.app'
+          : 'http://localhost:5173'
+      };
+    </script>
+    <script type="module" crossorigin src="/assets/index-C1pFWkAN.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CmamX9wG.css">
   </head>
   <body>
