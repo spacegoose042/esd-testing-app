@@ -13,6 +13,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/tests', require('./routes/tests'));
+app.use('/api/managers', require('./routes/managers'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -4,20 +4,18 @@ function UserEdit({ userId, onClose, onUpdate }) {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        managerEmail: '',
+        managerId: '',
         isAdmin: false
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [managers, setManagers] = useState([]);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem('token');
-                console.log('Token exists:', !!token);
-                console.log('Fetching user with ID:', userId);
-
-                const response = await fetch(`http://localhost:5001/api/users/${userId}`, {
+                const response = await fetch(`${config.apiUrl}/api/users/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -26,17 +24,14 @@ function UserEdit({ userId, onClose, onUpdate }) {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error('Server response:', errorData);
                     throw new Error(errorData.error || 'Failed to fetch user');
                 }
 
                 const data = await response.json();
-                console.log('User data received:', data);
-
                 setFormData({
                     firstName: data.first_name,
                     lastName: data.last_name,
-                    managerEmail: data.manager_email || '',
+                    managerId: data.manager_id || '',
                     isAdmin: data.is_admin
                 });
             } catch (err) {
@@ -50,6 +45,24 @@ function UserEdit({ userId, onClose, onUpdate }) {
         }
     }, [userId]);
 
+    useEffect(() => {
+        const fetchManagers = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/api/managers`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                setManagers(data);
+            } catch (err) {
+                console.error('Error fetching managers:', err);
+                setError('Failed to load managers');
+            }
+        };
+        fetchManagers();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -57,7 +70,7 @@ function UserEdit({ userId, onClose, onUpdate }) {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5001/api/users/${userId}`, {
+            const response = await fetch(`${config.apiUrl}/api/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +79,7 @@ function UserEdit({ userId, onClose, onUpdate }) {
                 body: JSON.stringify({
                     first_name: formData.firstName,
                     last_name: formData.lastName,
-                    manager_email: formData.managerEmail,
+                    manager_id: formData.managerId,
                     is_admin: formData.isAdmin
                 })
             });
@@ -140,16 +153,22 @@ function UserEdit({ userId, onClose, onUpdate }) {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="managerEmail" className="block text-sm font-medium text-gray-700">Manager's Email</label>
-                                <input
-                                    id="managerEmail"
-                                    name="managerEmail"
-                                    type="email"
+                                <label htmlFor="managerId" className="block text-sm font-medium text-gray-700">Manager</label>
+                                <select
+                                    id="managerId"
+                                    name="managerId"
                                     required
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    value={formData.managerEmail}
+                                    value={formData.managerId}
                                     onChange={handleChange}
-                                />
+                                >
+                                    <option value="">Select a Manager</option>
+                                    {managers.map(manager => (
+                                        <option key={manager.id} value={manager.id}>
+                                            {manager.first_name} {manager.last_name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex items-center">
                                 <input

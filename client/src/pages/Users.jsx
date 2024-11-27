@@ -7,15 +7,16 @@ function Users() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const [bulkManagerEmail, setBulkManagerEmail] = useState('');
+    const [selectedManagerId, setSelectedManagerId] = useState('');
     const [sortField, setSortField] = useState('last_name');
     const [sortDirection, setSortDirection] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
+    const [managers, setManagers] = useState([]);
 
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`/api/users`, {
+            const response = await fetch(`${config.apiUrl}/api/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -34,6 +35,23 @@ function Users() {
 
     useEffect(() => {
         fetchUsers();
+    }, []);
+
+    useEffect(() => {
+        const fetchManagers = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/api/managers`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                setManagers(data);
+            } catch (err) {
+                console.error('Error fetching managers:', err);
+            }
+        };
+        fetchManagers();
     }, []);
 
     const handleDelete = async (userId) => {
@@ -59,31 +77,29 @@ function Users() {
     };
 
     const handleBulkManagerUpdate = async () => {
-        if (!bulkManagerEmail || selectedUsers.length === 0) {
-            setError('Please select users and enter a manager email');
-            return;
-        }
+        if (!selectedManagerId || selectedUsers.length === 0) return;
 
         try {
-            const promises = selectedUsers.map(userId =>
-                fetch(`/api/users/${userId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({ manager_email: bulkManagerEmail })
+            const response = await fetch(`${config.apiUrl}/api/users/bulk-update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    userIds: selectedUsers,
+                    managerId: selectedManagerId
                 })
-            );
+            });
 
-            await Promise.all(promises);
-            setSuccess('Manager email updated for selected users');
-            fetchUsers();
-            setSelectedUsers([]);
-            setBulkManagerEmail('');
+            if (!response.ok) throw new Error('Failed to update users');
+            
+            setSuccess('Users updated successfully');
+            fetchUsers(); // Refresh the users list
+            setSelectedUsers([]); // Clear selection
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
-            setError('Failed to update manager emails');
+            setError(err.message);
             setTimeout(() => setError(''), 3000);
         }
     };
@@ -100,7 +116,7 @@ function Users() {
     const sortedAndFilteredUsers = users
         .filter(user => 
             `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (user.manager_email || '').toLowerCase().includes(searchTerm.toLowerCase())
+            `${user.manager_first_name || ''} ${user.manager_last_name || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => {
             let compareA = a[sortField] || '';
@@ -109,6 +125,9 @@ function Users() {
             if (sortField === 'name') {
                 compareA = `${a.first_name} ${a.last_name}`;
                 compareB = `${b.first_name} ${b.last_name}`;
+            } else if (sortField === 'manager_name') {
+                compareA = `${a.manager_first_name || ''} ${a.manager_last_name || ''}`;
+                compareB = `${b.manager_first_name || ''} ${b.manager_last_name || ''}`;
             }
             
             return sortDirection === 'asc' 
@@ -137,13 +156,18 @@ function Users() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="flex-1 p-2 border rounded"
                     />
-                    <input
-                        type="email"
-                        placeholder="Manager email for selected users"
-                        value={bulkManagerEmail}
-                        onChange={(e) => setBulkManagerEmail(e.target.value)}
+                    <select
+                        value={selectedManagerId}
+                        onChange={(e) => setSelectedManagerId(e.target.value)}
                         className="flex-1 p-2 border rounded"
-                    />
+                    >
+                        <option value="">Select Manager</option>
+                        {managers.map(manager => (
+                            <option key={manager.id} value={manager.id}>
+                                {manager.first_name} {manager.last_name}
+                            </option>
+                        ))}
+                    </select>
                     <button
                         onClick={handleBulkManagerUpdate}
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -175,9 +199,9 @@ function Users() {
                             </th>
                             <th 
                                 className="py-3 px-6 text-left cursor-pointer hover:bg-gray-300"
-                                onClick={() => handleSort('manager_email')}
+                                onClick={() => handleSort('manager_name')}
                             >
-                                Manager Email {sortField === 'manager_email' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                Manager Name {sortField === 'manager_name' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
                             <th className="py-3 px-6 text-left">Actions</th>
                         </tr>
@@ -202,7 +226,7 @@ function Users() {
                                     {user.first_name} {user.last_name}
                                 </td>
                                 <td className="py-3 px-6 text-left">
-                                    {user.manager_email || 'Not set'}
+                                    {user.manager_first_name || 'Not set'} {user.manager_last_name || 'Not set'}
                                 </td>
                                 <td className="py-3 px-6 text-left">
                                     <button

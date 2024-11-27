@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../config';
 
@@ -6,15 +6,34 @@ function Register() {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        managerEmail: '',
+        managerId: '',
         isAdmin: false,
         email: '',
         password: '',
         confirmPassword: ''
     });
+    const [managers, setManagers] = useState([]);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchManagers = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/api/managers`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                setManagers(data);
+            } catch (err) {
+                console.error('Error fetching managers:', err);
+                setError('Failed to load managers');
+            }
+        };
+        fetchManagers();
+    }, []);
 
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -46,9 +65,9 @@ function Register() {
                 body: JSON.stringify({
                     first_name: formData.firstName,
                     last_name: formData.lastName,
-                    manager_email: formData.managerEmail,
+                    manager_id: formData.managerId,
                     is_admin: formData.isAdmin,
-                    email: formData.isAdmin ? formData.email : formData.managerEmail,
+                    email: formData.isAdmin ? formData.email : formData.managerId,
                     password: formData.password
                 })
             });
@@ -120,17 +139,22 @@ function Register() {
                         </div>
 
                         <div className="mt-4">
-                            <label htmlFor="managerEmail" className="sr-only">Manager's Email</label>
-                            <input
-                                id="managerEmail"
-                                name="managerEmail"
-                                type="email"
+                            <label htmlFor="managerId" className="block text-sm font-medium text-gray-700">Manager</label>
+                            <select
+                                id="managerId"
+                                name="managerId"
                                 required
-                                className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                placeholder="Manager's Email"
-                                value={formData.managerEmail}
+                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                value={formData.managerId}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="">Select a Manager</option>
+                                {managers.map(manager => (
+                                    <option key={manager.id} value={manager.id}>
+                                        {manager.first_name} {manager.last_name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
