@@ -2,45 +2,32 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const testRoutes = require('./routes/tests');
 
 const app = express();
 
-const corsOptions = {
-  origin: [
-    'https://esd-testing-app-production.up.railway.app',
-    'http://localhost:5173'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
-
-app.use(cors(corsOptions));
+// CORS configuration
+app.use(cors());
 app.use(express.json());
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/tests', testRoutes);
+// API routes should come before static files
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/tests', require('./routes/tests'));
 
-// Add this before your other routes
+// Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok' });
 });
 
-// Static files
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all route
+// Handle all other routes by serving index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5001;
-
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
