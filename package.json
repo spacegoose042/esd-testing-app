@@ -1,14 +1,12 @@
 {
-  "name": "esd-testing-app",
+  "name": "esd-testing-frontend",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "server",
-    "client"
-  ],
   "scripts": {
-    "start": "cd server && npm start",
-    "build": "cd server && npm install"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=18.0.0"

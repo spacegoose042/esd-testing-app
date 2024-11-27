@@ -1,8 +1,17 @@
-# React + Vite
+# ESD Testing Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Setup
+1. Clone repository
+2. Copy `.env.example` to `.env` and update variables
+3. Install dependencies: `npm install`
+4. Start development server: `npm run dev`
 
-Currently, two official plugins are available:
+## Environment Variables
+- VITE_API_URL: Backend API URL
+- VITE_APP_ENV: Environment (development/production)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Available Scripts
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run preview`: Preview production build
+- `npm run lint`: Run ESLint
