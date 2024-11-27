@@ -1,11 +1,10 @@
-const defaultConfig = {
+const config = {
   apiUrl: window.location.hostname.includes('railway.app')
     ? window.location.origin
     : 'http://localhost:5001',
   isProduction: window.location.hostname.includes('railway.app')
 };
 
-// Use existing config if defined, otherwise use default
-window.__APP_CONFIG__ = window.__APP_CONFIG__ || defaultConfig;
-
-export default window.__APP_CONFIG__; 
+// Make config available both as a module export and global variable
+window.__APP_CONFIG__ = config;
+export default config; 

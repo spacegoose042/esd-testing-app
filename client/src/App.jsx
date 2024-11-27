@@ -12,30 +12,31 @@ function App() {
   useEffect(() => {
     const checkAdminStatus = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          console.log('Checking admin status...'); // Debug log
-          const apiUrl = window.__APP_CONFIG__.apiUrl;
-          const response = await fetch(`${apiUrl}/api/auth/verify`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Admin status response:', data); // Debug log
-            setIsAdmin(data.isAdmin);
-          } else {
-            console.log('Failed to verify admin status'); // Debug log
-            localStorage.removeItem('token');
-            setIsAdmin(false);
+      if (!token) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        console.log('Checking admin status...'); 
+        const response = await fetch(`${window.__APP_CONFIG__.apiUrl}/api/auth/verify`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
-        } catch (err) {
-          console.error('Error verifying admin status:', err);
+        });
+        
+        const data = await response.json();
+        console.log('Admin status response:', data);
+        
+        if (response.ok && data.isAdmin) {
+          setIsAdmin(true);
+        } else {
+          localStorage.removeItem('token');
           setIsAdmin(false);
         }
-      } else {
+      } catch (err) {
+        console.error('Error verifying admin status:', err);
+        localStorage.removeItem('token');
         setIsAdmin(false);
       }
     };
