@@ -1,36 +1,29 @@
 import config from '../config';
 
 export const login = async (email, password) => {
-    // Force production URL and log the attempt
-    const BASE_URL = 'https://esd-testing-app-production.up.railway.app';
-    const loginEndpoint = `${BASE_URL}/api/auth/login`;
+    const loginEndpoint = 'https://esd-testing-app-production.up.railway.app/api/auth/login';
     
-    console.log('Login attempt details:', {
-        email,
-        targetUrl: loginEndpoint,
-        configState: config,
-        baseUrl: BASE_URL,
+    // Debug logging
+    console.log('Login request configuration:', {
+        endpoint: loginEndpoint,
+        configUrl: config.apiUrl,
+        mode: import.meta.env.MODE,
         timestamp: new Date().toISOString()
     });
     
-    try {
-        const response = await fetch(loginEndpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-            credentials: 'include'
-        });
+    const response = await fetch(loginEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+    });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Login failed');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Login error details:', error);
-        throw error;
+    if (!response.ok) {
+        const error = await response.json();
+        console.error('Server response:', error);
+        throw new Error(error.message || 'Login failed');
     }
+
+    return response.json();
 }; 
