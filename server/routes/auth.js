@@ -72,4 +72,7 @@ router.get('/health', async (req, res) => {
     }
 });
 
+// Verify token and admin status
+router.get('/verify', authController.verifyToken);
+
 module.exports = router;

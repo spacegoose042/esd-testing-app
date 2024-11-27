@@ -77,6 +77,22 @@ class AuthController {
         }
         console.log('=== Login Request Ended ===\n');
     }
+
+    async verifyToken(req, res) {
+        try {
+            const token = req.header('Authorization')?.replace('Bearer ', '');
+            
+            if (!token) {
+                return res.status(401).json({ isAdmin: false });
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            res.json({ isAdmin: decoded.isAdmin });
+        } catch (err) {
+            console.error('Token verification error:', err);
+            res.status(401).json({ isAdmin: false });
+        }
+    }
 }
 
 module.exports = new AuthController();
