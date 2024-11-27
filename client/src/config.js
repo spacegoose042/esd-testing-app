@@ -1,9 +1,7 @@
-const config = {
+const config = window.__APP_CONFIG__ || {
     apiUrl: window.location.origin,
     isProduction: import.meta.env.MODE === 'production'
 };
-
-window.__APP_CONFIG__ = config;
 
 console.log('Config initialized:', {
     apiUrl: config.apiUrl,
