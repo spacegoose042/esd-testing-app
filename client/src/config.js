@@ -1,11 +1,10 @@
 const config = {
-    apiUrl: window.location.hostname.includes('railway.app')
-        ? 'https://esd-testing-app-production.up.railway.app'
-        : import.meta.env.VITE_API_URL || 'http://localhost:5173',
+    apiUrl: window.location.hostname.includes('railway.app') || window.location.hostname === 'localhost'
+        ? window.location.origin
+        : import.meta.env.VITE_API_URL,
     isProduction: import.meta.env.MODE === 'production'
 };
 
-// Ensure config is loaded early and accessible
 window.__APP_CONFIG__ = config;
 
 console.log('Config initialized:', {

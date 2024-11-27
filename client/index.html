@@ -7,11 +7,10 @@
     <title>ESD-Testing-App</title>
     <base href="/" />
     <script>
-      // Ensure config is available before main bundle loads
       window.__APP_CONFIG__ = {
         apiUrl: window.location.hostname.includes('railway.app')
           ? 'https://esd-testing-app-production.up.railway.app'
-          : 'http://localhost:5001'
+          : 'http://localhost:5173'
       };
     </script>
   </head>
