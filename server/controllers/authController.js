@@ -96,24 +96,20 @@ class AuthController {
 
     async register(req, res) {
         try {
-            const { first_name, last_name, manager_email, is_admin, email, password } = req.body;
+            const { email, password, first_name, last_name, manager_id } = req.body;
             
-            // Hash the password if provided
-            let passwordHash = null;
-            if (password) {
-                const salt = await bcrypt.genSalt(10);
-                passwordHash = await bcrypt.hash(password, salt);
-            }
-
+            // Hash the password
+            const salt = await bcrypt.genSalt(10);
+            const password_hash = await bcrypt.hash(password, salt);
+            
             // Insert the new user
             const result = await pool.query(
-                `INSERT INTO users 
-                (first_name, last_name, manager_email, is_admin, email, password_hash) 
-                VALUES ($1, $2, $3, $4, $5, $6) 
-                RETURNING id, email, is_admin`,
-                [first_name, last_name, manager_email, is_admin, email, passwordHash]
+                `INSERT INTO users (email, password_hash, first_name, last_name, manager_id) 
+                 VALUES ($1, $2, $3, $4, $5) 
+                 RETURNING *`,
+                [email, password_hash, first_name, last_name, manager_id]
             );
-
+            
             const user = result.rows[0];
             res.json({ 
                 message: 'User registered successfully',
@@ -125,13 +121,8 @@ class AuthController {
             });
 
         } catch (err) {
-            console.error('Registration error details:', {
-                name: err.name,
-                message: err.message,
-                code: err.code,
-                stack: err.stack?.split('\n')
-            });
-            res.status(500).json({ error: err.message || 'Server error during registration' });
+            console.error('Registration error details:', err);
+            res.status(500).json({ error: 'Error registering user' });
         }
     }
 }
