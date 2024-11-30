@@ -96,33 +96,30 @@ class AuthController {
 
     async register(req, res) {
         try {
-            // Log the incoming request (excluding password)
-            const { password, ...logData } = req.body;
-            console.log('Registration attempt:', logData);
+            // Log the incoming request (excluding sensitive data)
+            const { email, firstName, lastName, managerId } = req.body;
+            console.log('Registration attempt:', { email, firstName, lastName, managerId });
 
-            const { email, password, first_name, last_name, manager_id } = req.body;
-            
             // Validate required fields
-            if (!email || !password || !first_name || !last_name) {
+            if (!email || !req.body.password || !firstName || !lastName) {
                 return res.status(400).json({ 
                     error: 'Missing required fields',
-                    required: ['email', 'password', 'first_name', 'last_name']
+                    required: ['email', 'password', 'firstName', 'lastName']
                 });
             }
             
             // Hash the password
             const salt = await bcrypt.genSalt(10);
-            const password_hash = await bcrypt.hash(password, salt);
+            const password_hash = await bcrypt.hash(req.body.password, salt);
             
             // Insert the new user
             const result = await pool.query(
                 `INSERT INTO users (email, password_hash, first_name, last_name, manager_id) 
                  VALUES ($1, $2, $3, $4, $5) 
                  RETURNING *`,
-                [email, password_hash, first_name, last_name, manager_id]
+                [email, password_hash, firstName, lastName, managerId]
             );
             
-            // Log successful registration
             console.log('User registered successfully:', result.rows[0].id);
             
             res.json({ 
@@ -131,7 +128,6 @@ class AuthController {
             });
 
         } catch (err) {
-            // Detailed error logging
             console.error('Registration error details:', {
                 message: err.message,
                 code: err.code,
@@ -139,7 +135,6 @@ class AuthController {
                 detail: err.detail
             });
             
-            // Send appropriate error response
             if (err.code === '23505') { // Unique violation
                 return res.status(400).json({ 
                     error: 'Email already exists',
