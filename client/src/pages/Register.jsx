@@ -48,41 +48,41 @@ function Register() {
         setError('');
         setSuccess('');
 
-        if (formData.isAdmin && formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-
         try {
-            const url = `${config.apiUrl}/api/auth/register`;
-            
-            const response = await fetch(url, {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${config.apiUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
                     first_name: formData.firstName,
                     last_name: formData.lastName,
-                    manager_id: formData.managerId,
-                    is_admin: formData.isAdmin,
-                    email: formData.isAdmin ? formData.email : formData.managerId,
-                    password: formData.password
+                    manager_id: formData.managerId || null,
+                    is_admin: formData.isAdmin
                 })
             });
 
-            const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to register user');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Registration failed');
             }
 
+            const data = await response.json();
             setSuccess('User registered successfully');
-            setTimeout(() => {
-                navigate('/users');
-            }, 2000);
-
+            setFormData({
+                firstName: '',
+                lastName: '',
+                managerId: '',
+                isAdmin: false,
+                email: '',
+                password: '',
+                confirmPassword: ''
+            });
         } catch (err) {
             console.error('Registration error:', err);
             setError(err.message);

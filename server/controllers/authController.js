@@ -96,7 +96,11 @@ class AuthController {
 
     async register(req, res) {
         try {
-            const { email, password, first_name, last_name, manager_id } = req.body;
+            // Log the registration request (excluding password)
+            const { password, ...logData } = req.body;
+            console.log('Registration attempt with data:', logData);
+
+            const { email, first_name, last_name, manager_id } = req.body;
             
             // Hash the password
             const salt = await bcrypt.genSalt(10);
@@ -110,18 +114,22 @@ class AuthController {
                 [email, password_hash, first_name, last_name, manager_id]
             );
             
-            const user = result.rows[0];
+            // Log successful registration
+            console.log('User registered successfully:', result.rows[0].id);
+            
             res.json({ 
                 message: 'User registered successfully',
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    isAdmin: user.is_admin
-                }
+                user: result.rows[0]
             });
 
         } catch (err) {
-            console.error('Registration error details:', err);
+            // Detailed error logging
+            console.error('Registration error details:', {
+                message: err.message,
+                code: err.code,
+                stack: err.stack,
+                detail: err.detail
+            });
             res.status(500).json({ error: 'Error registering user' });
         }
     }
