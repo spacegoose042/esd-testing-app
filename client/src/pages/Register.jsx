@@ -48,6 +48,12 @@ function Register() {
         setError('');
         setSuccess('');
 
+        // Validate passwords match
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`${config.apiUrl}/api/auth/register`, {
@@ -55,25 +61,24 @@ function Register() {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password,
-                    first_name: formData.firstName,
-                    last_name: formData.lastName,
-                    manager_id: formData.managerId || null,
-                    is_admin: formData.isAdmin
-                })
+                body: JSON.stringify(formData)
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Registration failed');
+                // Check for specific error types
+                if (data.code === '23505') {
+                    setError('This email address is already registered');
+                } else {
+                    setError(data.message || 'Registration failed');
+                }
+                return;
             }
 
-            const data = await response.json();
             setSuccess('User registered successfully');
+            // Reset form
             setFormData({
                 firstName: '',
                 lastName: '',
@@ -85,7 +90,7 @@ function Register() {
             });
         } catch (err) {
             console.error('Registration error:', err);
-            setError(err.message);
+            setError('Failed to register user');
         }
     };
 
