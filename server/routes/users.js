@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
         const result = await pool.query(`
             SELECT 
                 u.*,
-                m.first_name as manager_first_name,
-                m.last_name as manager_last_name,
+                m.firstname as manager_first_name,
+                m.lastname as manager_last_name,
                 m.email as manager_email
             FROM users u
             LEFT JOIN managers m ON u.manager_id = m.id
@@ -29,8 +29,8 @@ router.get('/:id', auth, async (req, res) => {
         const result = await pool.query(`
             SELECT 
                 u.*,
-                m.first_name as manager_first_name,
-                m.last_name as manager_last_name,
+                m.firstname as manager_first_name,
+                m.lastname as manager_last_name,
                 m.email as manager_email
             FROM users u
             LEFT JOIN managers m ON u.manager_id = m.id

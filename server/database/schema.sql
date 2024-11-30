@@ -1,3 +1,12 @@
+-- Create managers table first (since it's referenced by users)
+CREATE TABLE IF NOT EXISTS managers (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -49,16 +58,3 @@ ON CONFLICT DO NOTHING;
 CREATE INDEX idx_esd_tests_user_id ON esd_tests(user_id);
 CREATE INDEX idx_esd_tests_date ON esd_tests(test_date);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
-
--- Create managers table
-CREATE TABLE managers (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Modify users table to use manager_id instead of manager_email
-ALTER TABLE users DROP COLUMN IF EXISTS manager_email;
-ALTER TABLE users ADD COLUMN manager_id INTEGER REFERENCES managers(id);
