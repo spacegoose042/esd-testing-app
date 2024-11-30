@@ -96,11 +96,19 @@ class AuthController {
 
     async register(req, res) {
         try {
-            // Log the registration request (excluding password)
+            // Log the incoming request (excluding password)
             const { password, ...logData } = req.body;
-            console.log('Registration attempt with data:', logData);
+            console.log('Registration attempt:', logData);
 
-            const { email, first_name, last_name, manager_id } = req.body;
+            const { email, password, first_name, last_name, manager_id } = req.body;
+            
+            // Validate required fields
+            if (!email || !password || !first_name || !last_name) {
+                return res.status(400).json({ 
+                    error: 'Missing required fields',
+                    required: ['email', 'password', 'first_name', 'last_name']
+                });
+            }
             
             // Hash the password
             const salt = await bcrypt.genSalt(10);
@@ -130,7 +138,19 @@ class AuthController {
                 stack: err.stack,
                 detail: err.detail
             });
-            res.status(500).json({ error: 'Error registering user' });
+            
+            // Send appropriate error response
+            if (err.code === '23505') { // Unique violation
+                return res.status(400).json({ 
+                    error: 'Email already exists',
+                    code: err.code 
+                });
+            }
+            
+            res.status(500).json({ 
+                error: 'Error registering user',
+                code: err.code
+            });
         }
     }
 }
