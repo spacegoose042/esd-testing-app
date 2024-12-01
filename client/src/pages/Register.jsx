@@ -49,25 +49,30 @@ function Register() {
         setSuccess('');
 
         // Validate all required fields
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-            setError('All fields are required');
+        if (!formData.firstName || !formData.lastName || !formData.managerId) {
+            setError('First name, last name, and manager are required');
             return;
         }
 
-        // Validate passwords match
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            return;
+        // Only validate email and password if registering as admin
+        if (formData.isAdmin) {
+            if (!formData.email || !formData.password) {
+                setError('Email and password are required for admin users');
+                return;
+            }
+            if (formData.password !== formData.confirmPassword) {
+                setError('Passwords do not match');
+                return;
+            }
         }
 
         try {
-            // Transform the data to match server expectations
             const requestData = {
                 first_name: formData.firstName,
                 last_name: formData.lastName,
-                email: formData.email,
-                password: formData.password,
-                manager_email: formData.managerId,
+                email: formData.isAdmin ? formData.email : `${formData.firstName.toLowerCase()}.${formData.lastName.toLowerCase()}@company.com`,
+                password: formData.isAdmin ? formData.password : 'defaultPassword123', // Set a default password for non-admin users
+                manager_email: formData.managerId,  // This is now correctly the manager's email
                 is_admin: formData.isAdmin
             };
 
@@ -88,7 +93,6 @@ function Register() {
             }
 
             setSuccess('User registered successfully');
-            // Reset form
             setFormData({
                 firstName: '',
                 lastName: '',
@@ -166,7 +170,7 @@ function Register() {
                             >
                                 <option value="">Select a Manager</option>
                                 {managers.map(manager => (
-                                    <option key={manager.id} value={manager.id}>
+                                    <option key={manager.id} value={manager.email}>
                                         {manager.first_name} {manager.last_name}
                                     </option>
                                 ))}
