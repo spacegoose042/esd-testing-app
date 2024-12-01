@@ -48,8 +48,9 @@ function Register() {
         setError('');
         setSuccess('');
 
-        if (!formData.password) {
-            setError('Password is required');
+        // Validate all required fields
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+            setError('All fields are required');
             return;
         }
 
@@ -60,6 +61,16 @@ function Register() {
         }
 
         try {
+            // Transform the data to match server expectations
+            const requestData = {
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                email: formData.email,
+                password: formData.password,
+                manager_email: formData.managerId,
+                is_admin: formData.isAdmin
+            };
+
             const token = localStorage.getItem('token');
             const response = await fetch(`${config.apiUrl}/api/auth/register`, {
                 method: 'POST',
@@ -67,19 +78,13 @@ function Register() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(requestData)
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                // Check for specific error types
-                if (data.code === '23505') {
-                    setError('This email address is already registered');
-                } else {
-                    setError(data.message || 'Registration failed');
-                }
-                return;
+                throw new Error(data.error || 'Registration failed');
             }
 
             setSuccess('User registered successfully');
@@ -93,9 +98,10 @@ function Register() {
                 password: '',
                 confirmPassword: ''
             });
+
         } catch (err) {
             console.error('Registration error:', err);
-            setError('Failed to register user');
+            setError(err.message);
         }
     };
 

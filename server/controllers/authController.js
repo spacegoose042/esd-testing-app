@@ -96,33 +96,51 @@ class AuthController {
 
     async register(req, res) {
         try {
-            // Log the incoming request (excluding sensitive data)
-            const { email, firstName, lastName, managerId } = req.body;
-            console.log('Registration attempt:', { email, firstName, lastName, managerId });
+            const { first_name, last_name, email, password, manager_email, is_admin } = req.body;
+            
+            // Log sanitized request data
+            console.log('Registration attempt:', {
+                first_name,
+                last_name,
+                email,
+                manager_email,
+                is_admin,
+                password: password ? '[REDACTED]' : undefined
+            });
 
             // Validate required fields
-            if (!email || !req.body.password || !firstName || !lastName) {
-                return res.status(400).json({ 
+            if (!first_name || !last_name || !email || !password) {
+                return res.status(400).json({
                     error: 'Missing required fields',
-                    required: ['email', 'password', 'firstName', 'lastName']
+                    required: ['first_name', 'last_name', 'email', 'password']
                 });
             }
-            
-            // Hash the password
+
+            // Hash password
             const salt = await bcrypt.genSalt(10);
-            const password_hash = await bcrypt.hash(req.body.password, salt);
-            
-            // Insert the new user
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            // Find manager ID if manager_email is provided
+            let managerId = null;
+            if (manager_email) {
+                const managerResult = await pool.query(
+                    'SELECT id FROM users WHERE email = $1',
+                    [manager_email]
+                );
+                if (managerResult.rows.length > 0) {
+                    managerId = managerResult.rows[0].id;
+                }
+            }
+
+            // Insert new user
             const result = await pool.query(
-                `INSERT INTO users (email, password_hash, first_name, last_name, manager_id) 
-                 VALUES ($1, $2, $3, $4, $5) 
-                 RETURNING *`,
-                [email, password_hash, firstName, lastName, managerId]
+                `INSERT INTO users (first_name, last_name, email, password_hash, manager_id, is_admin)
+                 VALUES ($1, $2, $3, $4, $5, $6)
+                 RETURNING id, first_name, last_name, email, is_admin`,
+                [first_name, last_name, email, hashedPassword, managerId, is_admin || false]
             );
-            
-            console.log('User registered successfully:', result.rows[0].id);
-            
-            res.json({ 
+
+            res.status(201).json({
                 message: 'User registered successfully',
                 user: result.rows[0]
             });
@@ -136,13 +154,13 @@ class AuthController {
             });
             
             if (err.code === '23505') { // Unique violation
-                return res.status(400).json({ 
+                return res.status(400).json({
                     error: 'Email already exists',
-                    code: err.code 
+                    code: err.code
                 });
             }
             
-            res.status(500).json({ 
+            res.status(500).json({
                 error: 'Error registering user',
                 code: err.code
             });
