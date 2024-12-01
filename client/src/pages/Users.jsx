@@ -118,24 +118,33 @@ function Users() {
 
     const sortedAndFilteredUsers = users
         .filter(user => 
-            `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            `${user.manager_first_name || ''} ${user.manager_last_name || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
+            user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.managerName.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => {
-            let compareA = a[sortField] || '';
-            let compareB = b[sortField] || '';
+            let compareA, compareB;
             
-            if (sortField === 'name') {
-                compareA = `${a.first_name} ${a.last_name}`;
-                compareB = `${b.first_name} ${b.last_name}`;
-            } else if (sortField === 'manager_name') {
-                compareA = `${a.manager_first_name || ''} ${a.manager_last_name || ''}`;
-                compareB = `${b.manager_first_name || ''} ${b.manager_last_name || ''}`;
+            switch (sortField) {
+                case 'name':
+                    compareA = a.fullName;
+                    compareB = b.fullName;
+                    break;
+                case 'manager_name':
+                    compareA = a.managerName;
+                    compareB = b.managerName;
+                    break;
+                case 'is_admin':
+                    compareA = a.is_admin ? '1' : '0';
+                    compareB = b.is_admin ? '1' : '0';
+                    break;
+                default:
+                    compareA = a[sortField];
+                    compareB = b[sortField];
             }
             
             return sortDirection === 'asc' 
-                ? compareA.localeCompare(compareB)
-                : compareB.localeCompare(compareA);
+                ? compareA.toString().localeCompare(compareB.toString())
+                : compareB.toString().localeCompare(compareA.toString());
         });
 
     return (
@@ -154,7 +163,7 @@ function Users() {
                 <div className="flex space-x-4">
                     <input
                         type="text"
-                        placeholder="Search users..."
+                        placeholder="Search by name or manager..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="flex-1 p-2 border rounded"
@@ -162,7 +171,7 @@ function Users() {
                     <select
                         value={selectedManagerId}
                         onChange={(e) => setSelectedManagerId(e.target.value)}
-                        className="flex-1 p-2 border rounded"
+                        className="p-2 border rounded"
                     >
                         <option value="">Select Manager</option>
                         {managers.map(manager => (
@@ -231,13 +240,11 @@ function Users() {
                                         }}
                                     />
                                 </td>
-                                <td className="py-3 px-6 text-left">
-                                    {user.first_name} {user.last_name}
+                                <td className="py-3 px-6 text-left whitespace-nowrap">
+                                    {user.fullName}
                                 </td>
-                                <td className="py-3 px-6 text-left">
-                                    {user.manager_first_name && user.manager_last_name 
-                                        ? `${user.manager_first_name} ${user.manager_last_name}`
-                                        : 'No Manager'}
+                                <td className="py-3 px-6 text-left whitespace-nowrap">
+                                    {user.managerName}
                                 </td>
                                 <td className="py-3 px-6 text-left">
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
