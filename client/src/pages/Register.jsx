@@ -48,6 +48,11 @@ function Register() {
         setError('');
         setSuccess('');
 
+        if (!formData.password) {
+            setError('Password is required');
+            return;
+        }
+
         // Validate passwords match
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
