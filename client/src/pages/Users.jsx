@@ -204,7 +204,13 @@ function Users() {
                                 className="py-3 px-6 text-left cursor-pointer hover:bg-gray-300"
                                 onClick={() => handleSort('manager_name')}
                             >
-                                Manager Name {sortField === 'manager_name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                Manager {sortField === 'manager_name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                                className="py-3 px-6 text-left cursor-pointer hover:bg-gray-300"
+                                onClick={() => handleSort('is_admin')}
+                            >
+                                Admin {sortField === 'is_admin' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
                             <th className="py-3 px-6 text-left">Actions</th>
                         </tr>
@@ -229,7 +235,18 @@ function Users() {
                                     {user.first_name} {user.last_name}
                                 </td>
                                 <td className="py-3 px-6 text-left">
-                                    {user.manager_first_name || 'Not set'} {user.manager_last_name || 'Not set'}
+                                    {user.manager_first_name && user.manager_last_name 
+                                        ? `${user.manager_first_name} ${user.manager_last_name}`
+                                        : 'No Manager'}
+                                </td>
+                                <td className="py-3 px-6 text-left">
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                        user.is_admin 
+                                            ? 'bg-green-100 text-green-800' 
+                                            : 'bg-gray-100 text-gray-800'
+                                    }`}>
+                                        {user.is_admin ? 'Yes' : 'No'}
+                                    </span>
                                 </td>
                                 <td className="py-3 px-6 text-left">
                                     <button
