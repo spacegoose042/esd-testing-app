@@ -13,27 +13,30 @@ function Users() {
     const [searchTerm, setSearchTerm] = useState('');
     const [managers, setManagers] = useState([]);
 
-    const fetchUsers = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${config.apiUrl}/api/users`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch users');
-            const data = await response.json();
-            console.log('Fetched users:', data); // Debug log
-            setUsers(data);
-        } catch (err) {
-            console.error('Error fetching users:', err);
-            setError('Failed to load users');
-        }
-    };
-
     useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`${config.apiUrl}/api/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                
+                const transformedData = data.map(user => ({
+                    ...user,
+                    fullName: `${user.first_name} ${user.last_name}`,
+                    managerName: user.manager_first_name && user.manager_last_name 
+                        ? `${user.manager_first_name} ${user.manager_last_name}`
+                        : 'No Manager'
+                }));
+                
+                setUsers(transformedData);
+            } catch (err) {
+                console.error('Error fetching users:', err);
+            }
+        };
+
         fetchUsers();
     }, []);
 
