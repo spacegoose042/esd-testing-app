@@ -16,6 +16,7 @@ function Users() {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            console.log('Fetching users from:', `${config.apiUrl}/api/users`);
             try {
                 const response = await fetch(`${config.apiUrl}/api/users`, {
                     headers: {
@@ -36,7 +37,11 @@ function Users() {
                 console.log('Transformed user data:', transformedData);
                 setUsers(transformedData);
             } catch (err) {
-                console.error('Error fetching users:', err);
+                console.error('Error fetching users:', {
+                    error: err,
+                    apiUrl: config.apiUrl,
+                    environment: import.meta.env.MODE
+                });
             }
         };
 
@@ -64,7 +69,7 @@ function Users() {
         if (!window.confirm('Are you sure you want to delete this user?')) return;
 
         try {
-            const response = await fetch(`/api/users/${userId}`, {
+            const response = await fetch(`${config.apiUrl}/api/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
