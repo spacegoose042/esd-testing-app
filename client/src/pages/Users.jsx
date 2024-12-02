@@ -22,6 +22,7 @@ function Users() {
                     }
                 });
                 const data = await response.json();
+                console.log('Raw user data:', data);
                 
                 const transformedData = data.map(user => ({
                     ...user,
@@ -31,6 +32,7 @@ function Users() {
                         : 'No Manager'
                 }));
                 
+                console.log('Transformed user data:', transformedData);
                 setUsers(transformedData);
             } catch (err) {
                 console.error('Error fetching users:', err);
