@@ -10,10 +10,8 @@ async function initializeDatabase() {
     console.log('Database URL format:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 
     const pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
+        connectionString: process.env.DATABASE_URL + "?sslmode=require",
+        ssl: true
     });
 
     try {
