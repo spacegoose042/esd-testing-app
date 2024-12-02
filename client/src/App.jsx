@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Users from './pages/Users';
 import Navbar from './components/Navbar';
+import config from './config';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -19,7 +20,7 @@ function App() {
       }
 
       try {
-        const response = await fetch(`${window.__APP_CONFIG__.apiUrl}/api/auth/verify`, {
+        const response = await fetch(`${config.apiUrl}/api/auth/verify`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
