@@ -1,11 +1,10 @@
 import axios from 'axios';
-import config from '../config';
-
-console.log('API Service initialized with URL:', config.apiUrl);
 
 const api = axios.create({
-  baseURL: config.apiUrl,
-  // You can add other axios configurations here
+    baseURL: import.meta.env.VITE_API_URL || 'https://esd-testing-app-production.up.railway.app',
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
 export default api; 
