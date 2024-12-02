@@ -11,6 +11,7 @@
 server/.env
 client/.env
 client/console logs
+server/.env.example
 
 # Debug logs
 npm-debug.log*
