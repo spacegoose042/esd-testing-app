@@ -12,7 +12,8 @@ server/.env
 client/.env
 client/console logs
 server/.env.example
-/temp-hash
+temp-hash
+server/.env.example
 
 # Debug logs
 npm-debug.log*
@@ -22,6 +23,8 @@ yarn-error.log*
 # Build directories
 /build
 /dist
+client/dist
+client/node_modules
 
 # IDE specific files
 .idea
