@@ -1,10 +1,8 @@
 const config = {
-  apiUrl: window.location.hostname.includes('railway.app')
-    ? window.location.origin
+  apiUrl: process.env.NODE_ENV === 'production'
+    ? 'https://esd-testing-app-production.up.railway.app'
     : 'http://localhost:5001',
-  isProduction: window.location.hostname.includes('railway.app')
+  isProduction: process.env.NODE_ENV === 'production'
 };
 
-// Make config available both as a module export and global variable
-window.__APP_CONFIG__ = config;
 export default config; 
