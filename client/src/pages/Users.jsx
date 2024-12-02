@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import UserEdit from '../components/UserEdit';
+import config from '../config';
 
 function Users() {
     const [users, setUsers] = useState([]);
