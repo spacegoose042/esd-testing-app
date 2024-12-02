@@ -13,8 +13,7 @@ function Home() {
       // If there's no token, we'll still fetch users but might get a limited list
       fetch(`${window.__APP_CONFIG__.apiUrl}/api/users`, {
           headers: {
-              ...(token && { 'Authorization': `Bearer ${token}` }),
-              'Content-Type': 'application/json'
+              'Authorization': `Bearer ${token}`
           }
       })
       .then(res => {
