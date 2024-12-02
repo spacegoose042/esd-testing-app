@@ -13,6 +13,7 @@ function App() {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
+      console.log('API URL:', config.apiUrl);
       const token = localStorage.getItem('token');
       if (!token) {
         setIsAdmin(false);
