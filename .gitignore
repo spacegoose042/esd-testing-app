@@ -8,23 +8,21 @@
 .env.local
 .env.development
 .env.production
-server/.env
-client/.env
-client/console logs
-server/.env.example
-temp-hash
-server/.env.example
-
-# Debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Build directories
 /build
 /dist
 client/dist
 client/node_modules
+
+# But don't ignore these
+!railway.toml
+!.nixpacks.toml
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # IDE specific files
 .idea

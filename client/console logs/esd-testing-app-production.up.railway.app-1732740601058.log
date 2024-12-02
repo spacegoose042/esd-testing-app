@@ -1,0 +1,80 @@
+index-Dec3eusN.js:70 Main.jsx initializing with config: {apiUrl: 'https://esd-testing-app-production.up.railway.app', isProduction: true}
+index-Dec3eusN.js:70 Current isAdmin state: false
+index-Dec3eusN.js:70 Rendering nav, isAdmin: false
+index-Dec3eusN.js:58 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+cm @ index-Dec3eusN.js:58
+yu @ index-Dec3eusN.js:58
+dm @ index-Dec3eusN.js:58
+(anonymous) @ index-Dec3eusN.js:67
+El @ index-Dec3eusN.js:40
+sn @ index-Dec3eusN.js:40
+(anonymous) @ index-Dec3eusN.js:40
+y @ index-Dec3eusN.js:25
+$t @ index-Dec3eusN.js:25
+index-Dec3eusN.js:58 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+cm @ index-Dec3eusN.js:58
+yu @ index-Dec3eusN.js:58
+dm @ index-Dec3eusN.js:58
+(anonymous) @ index-Dec3eusN.js:67
+El @ index-Dec3eusN.js:40
+sn @ index-Dec3eusN.js:40
+(anonymous) @ index-Dec3eusN.js:40
+y @ index-Dec3eusN.js:25
+$t @ index-Dec3eusN.js:25
+index-Dec3eusN.js:70 Checking admin status...
+index-Dec3eusN.js:70 Fetch finished loading: GET "https://esd-testing-app-production.up.railway.app/api/auth/verify".
+(anonymous) @ index-Dec3eusN.js:70
+(anonymous) @ index-Dec3eusN.js:70
+El @ index-Dec3eusN.js:40
+sn @ index-Dec3eusN.js:40
+(anonymous) @ index-Dec3eusN.js:40
+y @ index-Dec3eusN.js:25
+$t @ index-Dec3eusN.js:25
+index-Dec3eusN.js:70 Admin status response: {isAdmin: true}
+index-Dec3eusN.js:70 Current isAdmin state: true
+index-Dec3eusN.js:70 Rendering nav, isAdmin: true
+register:1 [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) <input id=​"password" name=​"password" type=​"password" required class=​"appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:​outline-none focus:​ring-blue-500 focus:​border-blue-500 sm:​text-sm" placeholder=​"Enter password" value>​
+register:1 [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) <input id=​"confirmPassword" name=​"confirmPassword" type=​"password" required class=​"appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:​outline-none focus:​ring-blue-500 focus:​border-blue-500 sm:​text-sm" placeholder=​"Confirm password" value>​
+index-Dec3eusN.js:70 
+        
+        
+       POST https://esd-testing-app-production.up.railway.app/api/auth/register 404 (Not Found)
+u @ index-Dec3eusN.js:70
+Pd @ index-Dec3eusN.js:37
+Td @ index-Dec3eusN.js:37
+Rd @ index-Dec3eusN.js:37
+Rs @ index-Dec3eusN.js:37
+La @ index-Dec3eusN.js:37
+(anonymous) @ index-Dec3eusN.js:37
+Ki @ index-Dec3eusN.js:40
+bu @ index-Dec3eusN.js:37
+Zl @ index-Dec3eusN.js:37
+wi @ index-Dec3eusN.js:37
+Yd @ index-Dec3eusN.js:37
+index-Dec3eusN.js:70 Registration error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+u @ index-Dec3eusN.js:70
+await in u
+Pd @ index-Dec3eusN.js:37
+Td @ index-Dec3eusN.js:37
+Rd @ index-Dec3eusN.js:37
+Rs @ index-Dec3eusN.js:37
+La @ index-Dec3eusN.js:37
+(anonymous) @ index-Dec3eusN.js:37
+Ki @ index-Dec3eusN.js:40
+bu @ index-Dec3eusN.js:37
+Zl @ index-Dec3eusN.js:37
+wi @ index-Dec3eusN.js:37
+Yd @ index-Dec3eusN.js:37
+index-Dec3eusN.js:70 Fetch failed loading: POST "https://esd-testing-app-production.up.railway.app/api/auth/register".
+u @ index-Dec3eusN.js:70
+Pd @ index-Dec3eusN.js:37
+Td @ index-Dec3eusN.js:37
+Rd @ index-Dec3eusN.js:37
+Rs @ index-Dec3eusN.js:37
+La @ index-Dec3eusN.js:37
+(anonymous) @ index-Dec3eusN.js:37
+Ki @ index-Dec3eusN.js:40
+bu @ index-Dec3eusN.js:37
+Zl @ index-Dec3eusN.js:37
+wi @ index-Dec3eusN.js:37
+Yd @ index-Dec3eusN.js:37

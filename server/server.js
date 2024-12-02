@@ -34,6 +34,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Add this near your other routes
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
