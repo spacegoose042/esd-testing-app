@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Home from './pages/Home';
@@ -9,14 +10,36 @@ import Navbar from './components/Navbar';
 import config from './config';
 import { ErrorBoundary } from 'react-error-boundary';
 
-function ErrorFallback({error}) {
-  return (
-    <div role="alert" style={{padding: '20px'}}>
-      <h2>Something went wrong:</h2>
-      <pre style={{whiteSpace: 'pre-wrap'}}>{error.message}</pre>
-      <pre style={{whiteSpace: 'pre-wrap'}}>API URL: {import.meta.env.VITE_API_URL}</pre>
-    </div>
-  );
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error caught by boundary:', error);
+    console.log('Current config:', config);
+    console.log('Current env:', import.meta.env);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div role="alert" style={{padding: '20px'}}>
+          <h2>Something went wrong:</h2>
+          <pre style={{whiteSpace: 'pre-wrap'}}>{this.state.error?.message}</pre>
+          <pre style={{whiteSpace: 'pre-wrap'}}>Config: {JSON.stringify(config, null, 2)}</pre>
+          <pre style={{whiteSpace: 'pre-wrap'}}>API URL: {config.apiUrl}</pre>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 function App() {
@@ -61,8 +84,10 @@ function App() {
     checkAdminStatus();
   }, []);
 
+  console.log('App rendering with config:', config);
+
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary>
       <Router>
         <div className="min-h-screen bg-gray-100">
           <Navbar isAdmin={isAdmin} />

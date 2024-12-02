@@ -1,14 +1,8 @@
-const apiUrl = import.meta.env.VITE_API_URL || 'https://esd-testing-app-production.up.railway.app';
-
-console.log('API URL:', apiUrl); // Debugging line
-
 const config = {
-  apiUrl,
-  // Add any other configuration values here
+  apiUrl: import.meta.env.VITE_API_URL || 'https://esd-testing-app-production.up.railway.app'
 };
 
-if (!config.apiUrl) {
-  console.error('API URL is not defined in environment variables');
-}
+console.log('Config loaded:', config);
+console.log('API URL from env:', import.meta.env.VITE_API_URL);
 
 export default config; 
