@@ -7,6 +7,17 @@ import Register from './pages/Register';
 import Users from './pages/Users';
 import Navbar from './components/Navbar';
 import config from './config';
+import { ErrorBoundary } from 'react-error-boundary';
+
+function ErrorFallback({error}) {
+  return (
+    <div role="alert" style={{padding: '20px'}}>
+      <h2>Something went wrong:</h2>
+      <pre style={{whiteSpace: 'pre-wrap'}}>{error.message}</pre>
+      <pre style={{whiteSpace: 'pre-wrap'}}>API URL: {import.meta.env.VITE_API_URL}</pre>
+    </div>
+  );
+}
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -51,24 +62,26 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100">
-        <Navbar isAdmin={isAdmin} />
-        <div className="container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
-            {isAdmin && (
-              <>
-                <Route path="/register" element={<Register />} />
-                <Route path="/users" element={<Users />} />
-              </>
-            )}
-          </Routes>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Router>
+        <div className="min-h-screen bg-gray-100">
+          <Navbar isAdmin={isAdmin} />
+          <div className="container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
+              {isAdmin && (
+                <>
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/users" element={<Users />} />
+                </>
+              )}
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
