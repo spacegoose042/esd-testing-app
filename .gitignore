@@ -12,6 +12,7 @@ server/.env
 client/.env
 client/console logs
 server/.env.example
+/temp-hash
 
 # Debug logs
 npm-debug.log*
